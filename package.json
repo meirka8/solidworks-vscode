@@ -7,7 +7,7 @@
     "vscode": "^1.71.0"
   },
   "categories": [
-    "Other"
+    "Programming Languages"
   ],
   "activationEvents": [
     "onCommand:solidworks.helloWorld"
@@ -18,6 +18,20 @@
       {
         "command": "solidworks.helloWorld",
         "title": "Hello World"
+      }
+    ],
+    "languages": [
+      {
+        "id": "solidworks",
+        "extensions": [
+          ".swe",
+          ".txt"
+        ],
+        "aliases": [
+          "SWE",
+          "Solidworks equasions"
+        ],
+        "configuration": "./language-configuration.json"
       }
     ]
   },
