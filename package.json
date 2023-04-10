@@ -1,7 +1,7 @@
 {
   "name": "solidworks",
   "displayName": "Solidworks",
-  "description": "Extension for editing solidworks equasions",
+  "description": "Extension for editing solidworks equations",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.71.0"
@@ -14,24 +14,25 @@
   ],
   "main": "./src/client/out/extension",
   "contributes": {
-    "commands": [
-      {
-        "command": "solidworks.helloWorld",
-        "title": "Hello World"
-      }
-    ],
     "languages": [
       {
-        "id": "solidworks",
+        "id": "solidworks-equations",
         "extensions": [
           ".swe",
+          ".eqn",
           ".txt"
         ],
         "aliases": [
-          "SWE",
-          "Solidworks equasions"
-        ],
-        "configuration": "./language-configuration.json"
+          "Solidworks Equations",
+          "SWE"
+        ]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "solidworks-equations",
+        "scopeName": "source.solidworks-equations",
+        "path": "./syntaxes/solidworks-equations.tmLanguage.json"
       }
     ]
   },

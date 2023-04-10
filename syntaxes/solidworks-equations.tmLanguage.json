@@ -5,7 +5,7 @@
     "patterns": [
       {
         "name": "variable.solidworks-equations",
-        "match": "\\b[a-zA-Z]\\w*\\b"
+        "match": "\"[a-zA-Z]\\w*\""
       }
     ],
     "repository": {},
