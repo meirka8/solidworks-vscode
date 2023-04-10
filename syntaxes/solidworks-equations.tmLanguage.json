@@ -1,0 +1,14 @@
+{
+    "fileTypes": [".eqn"],
+    "name": "SolidWorks Equations",
+    "scopeName": "source.solidworks-equations",
+    "patterns": [
+      {
+        "name": "variable.solidworks-equations",
+        "match": "\\b[a-zA-Z]\\w*\\b"
+      }
+    ],
+    "repository": {},
+    "uuid": "89e6337f-2173-42dd-b079-3af8e5862586"
+  }
+  
