@@ -4,16 +4,16 @@
     "scopeName": "source.solidworks-equations",
     "patterns": [
       {
-        "name": "entity.name.unit.solidworks-equations",
-        "match": "(?<==\\s*\\b\\d+(?:\\.\\d+)?\\b\\s*)(?:mm|in|s|N)"
-      },
-      {
         "name": "variable.solidworks-equations",
         "match": "\"[a-zA-Z]\\w*\""
       },
       {
         "name": "constant.numeric.solidworks-equations",
         "match": "\\b\\d+(?:\\.\\d+)?\\b"
+      },
+      {
+        "name": "constant.language.solidworks-equations",
+        "match": "\\b(mm|in|ft|m|rad|deg|s|kg|lb|N|lbf|K|C|R)\\b"
       }
     ],
     "repository": {},
