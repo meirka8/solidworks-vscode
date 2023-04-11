@@ -14,9 +14,26 @@
       {
         "name": "constant.language.solidworks-equations",
         "match": "(?<=\\d\\s?)(mm|in|ft|m|s|rad|deg|Hz|N|lbf|lbm|slug|g|kg|Pa|psi|atm)"
-      }
+      },
+      { "include": "#specific-measurement" }
     ],
-    "repository": {},
+    "repository": {
+      "specific-measurement": {
+        "begin": "(\"[a-zA-Z]\\w*@\\w+)",
+        "end": "\"",
+        "beginCaptures": {
+          "0": {
+            "name": "entity.name.function.solidworks-equations"
+          }
+        },
+        "endCaptures": {
+          "0": {
+            "name": "punctuation.definition.string.end.solidworks-equations"
+          }
+        },
+        "patterns": []
+      }
+    },
     "uuid": "89e6337f-2173-42dd-b079-3af8e5862586"
   }
   
