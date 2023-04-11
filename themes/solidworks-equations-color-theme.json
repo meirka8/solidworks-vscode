@@ -1,0 +1,15 @@
+{
+    "name": "SolidWorks Equations Color Theme",
+    "type": "dark",
+    "include": "Default Dark+",
+    "colors": {},
+    "tokenColors": [
+      {
+        "scope": "entity.name.unit.solidworks-equations",
+        "settings": {
+          "foreground": "#FF0000"
+        }
+      }
+    ]
+  }
+  

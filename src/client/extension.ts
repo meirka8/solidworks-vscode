@@ -4,7 +4,7 @@ import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } f
 let client: LanguageClient;
 
 export function activate(context: vscode.ExtensionContext): void {
-  const serverModule = context.asAbsolutePath('server/out/server.js');
+  const serverModule = context.asAbsolutePath('out/server/server.js');
   const debugOptions = { execArgv: ['--nolazy', '--inspect=6009'] };
   const serverOptions: ServerOptions = {
     run: { module: serverModule, transport: TransportKind.ipc },

@@ -4,8 +4,16 @@
     "scopeName": "source.solidworks-equations",
     "patterns": [
       {
+        "name": "entity.name.unit.solidworks-equations",
+        "match": "(?<==\\s*\\b\\d+(?:\\.\\d+)?\\b\\s*)(?:mm|in|s|N)"
+      },
+      {
         "name": "variable.solidworks-equations",
         "match": "\"[a-zA-Z]\\w*\""
+      },
+      {
+        "name": "constant.numeric.solidworks-equations",
+        "match": "\\b\\d+(?:\\.\\d+)?\\b"
       }
     ],
     "repository": {},

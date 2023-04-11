@@ -12,7 +12,7 @@
   "activationEvents": [
     "onLanguage:solidworks-equations"
   ],
-  "main": "./src/client/out/extension",
+  "main": "./out/client/extension.js",
   "contributes": {
     "languages": [
       {
@@ -33,6 +33,13 @@
         "language": "solidworks-equations",
         "scopeName": "source.solidworks-equations",
         "path": "./syntaxes/solidworks-equations.tmLanguage.json"
+      }
+    ],
+    "themes": [
+      {
+        "label": "SolidWorks Equations Color Theme",
+        "uiTheme": "vs-dark",
+        "path": "./themes/solidworks-equations-color-theme.json"
       }
     ]
   },
