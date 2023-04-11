@@ -9,11 +9,11 @@
       },
       {
         "name": "constant.numeric.solidworks-equations",
-        "match": "\\b\\d+(?:\\.\\d+)?\\b"
+        "match": "\\b\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?(?:(?=\\s)|(?=\\s?(?:mm|in|ft|m|s|rad|deg|Hz|N|lbf|lbm|slug|g|kg|Pa|psi|atm)\\b))"
       },
       {
         "name": "constant.language.solidworks-equations",
-        "match": "\\b(mm|in|ft|m|rad|deg|s|kg|lb|N|lbf|K|C|R)\\b"
+        "match": "(?<=\\d\\s?)(mm|in|ft|m|s|rad|deg|Hz|N|lbf|lbm|slug|g|kg|Pa|psi|atm)"
       }
     ],
     "repository": {},
