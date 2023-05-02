@@ -9,7 +9,7 @@ Basic highlighting of
  - units
  - dimensions on sketches
 
-\!\[Highlighting\]\(examples/screenshots/highlighting.PNG\)
+![Highlighting]\(examples/screenshots/highlighting.PNG)
 
 ## Scope
 
