@@ -45,6 +45,7 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
+    "@types/antlr4": "^4.11.2",
     "@types/glob": "^7.2.0",
     "@types/mocha": "^9.1.1",
     "@types/node": "16.x",
@@ -71,5 +72,8 @@
     "url": "https://github.com/meirka8/solidworks-vscode/issues"
   },
   "homepage": "https://github.com/meirka8/solidworks-vscode#readme",
-  "publisher": "MeirKanevskiy"
+  "publisher": "MeirKanevskiy",
+  "dependencies": {
+    "antlr4": "^4.12.0"
+  }
 }
