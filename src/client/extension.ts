@@ -20,7 +20,16 @@ export function activate(context: vscode.ExtensionContext): void {
   };
 
   client = new LanguageClient('solidworksEquationsHighlighter', 'SolidWorks Equations Highlighter', serverOptions, clientOptions);
-  client.start();
+
+  client.start().then(() => {
+    vscode.workspace.onDidChangeTextDocument((event) => {
+      const document = event.document;
+      const filePath = document.uri.fsPath;
+      const fileName = filePath.slice(filePath.lastIndexOf('/') + 1);
+
+      client.sendRequest('updateDocument', { fileName, text: document.getText() });
+    });
+  });
 }
 
 export function deactivate(): Thenable<void> | undefined {
