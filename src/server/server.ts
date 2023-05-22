@@ -27,9 +27,14 @@ connection.onInitialize((_params: InitializeParams) => {
 });
 
 documents.onDidChangeContent((change) => {
+  const charStream = antlr4.CharStreams.fromString(change.document.getText());
+  const lexer = new SolidWorksEquationsLexer(charStream);
+  const parser = new SolidWorksEquationsParser(new antlr4.CommonTokenStream(lexer));
+  const tree = parser.equation();
+
   const sourceFile = ts.createSourceFile(
     'temp.ts',
-    change.document.getText(),
+    tree.toStringTree(parser.ruleNames, parser),
     ts.ScriptTarget.Latest,
     /*setParentNodes */ true
   );
