@@ -10,7 +10,8 @@ import {
   
   const connection = createConnection(ProposedFeatures.all);
   const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
-  
+  let variables: string[] = [];
+
   connection.onInitialize((_params: InitializeParams) => {
     const result: InitializeResult = {
       capabilities: {
@@ -18,6 +19,15 @@ import {
       },
     };
     return result;
+  });
+
+  documents.onDidChangeContent(change => {
+    const document = change.document;
+    const matches = document.getText().match(/(?<=variable\.solidworks-equations\n).*?(?=^\s*$)/gms);
+    if (matches) {
+      const newVariables = matches.map(match => match.trim());
+      variables = [...variables, ...newVariables];
+    }
   });
   
   documents.listen(connection);
