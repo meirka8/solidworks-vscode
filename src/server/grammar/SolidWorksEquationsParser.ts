@@ -392,7 +392,7 @@ export class EquationsContext extends ParserRuleContext {
 
 
 export class EquationContext extends ParserRuleContext {
-	constructor(parser?: SolidWorksEquationsParser, parent?: ParserRuleContext, invokingState?: number) {
+	constructor(parser?: SolidWorksEquationsParser | undefined, parent?: ParserRuleContext | undefined, invokingState?: number | undefined, ...args: any[]) {
 		super(parent, invokingState);
 		this.parser = parser;
 	}
@@ -419,7 +419,7 @@ export class EquationContext extends ParserRuleContext {
 
 
 export class VariableDeclarationContext extends ParserRuleContext {
-	constructor(parser?: SolidWorksEquationsParser, parent?: ParserRuleContext, invokingState?: number) {
+	constructor(parser?: SolidWorksEquationsParser | undefined, parent?: ParserRuleContext | undefined, invokingState?: number | undefined) {
 		super(parent, invokingState);
 		this.parser = parser;
 	}
@@ -477,7 +477,7 @@ export class PropertyAssignmentContext extends ParserRuleContext {
 
 export class ExpressionContext extends ParserRuleContext {
 	public _op!: Token;
-	constructor(parser?: SolidWorksEquationsParser, parent?: ParserRuleContext, invokingState?: number) {
+	constructor(parser?: SolidWorksEquationsParser | undefined, parent?: ParserRuleContext | undefined, invokingState?: number | undefined) {
 		super(parent, invokingState);
 		this.parser = parser;
 	}
