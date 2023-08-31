@@ -21,9 +21,9 @@ import {
     return result;
   });
 
-  documents.onDidChangeContent(change => {
-    const document = change.document;
-    const matches = document.getText().match(/(?<=variable\.solidworks-equations\n).*?(?=^\s*$)/gms);
+  connection.onRequest('updateDocument', (params: { fileName: string, text: string }) => {
+    const { fileName, text } = params;
+    const matches = text.match(/(?<=variable\.solidworks-equations\n).*?(?=^\s*$)/gms);
     if (matches) {
       const newVariables = matches.map(match => match.trim());
       variables = [...variables, ...newVariables];
