@@ -5,10 +5,12 @@ import {
     InitializeParams,
     TextDocumentSyncKind,
     InitializeResult,
+    DidChangeTextDocumentParams,
   } from 'vscode-languageserver/node';
   import { TextDocument } from 'vscode-languageserver-textdocument';
   
   const connection = createConnection(ProposedFeatures.all);
+  console.log('Server started!');
   const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
   let variables: string[] = [];
 
@@ -20,16 +22,26 @@ import {
     };
     return result;
   });
+  
+  // Listen for changes to the text document and update the list of variables
+  connection.onDidChangeTextDocument((params: DidChangeTextDocumentParams) => {
+    const document = documents.get(params.textDocument.uri);
 
-  connection.onRequest('updateDocument', (params: { fileName: string, text: string }) => {
-    const { fileName, text } = params;
-    const matches = text.match(/(?<=variable\.solidworks-equations\n).*?(?=^\s*$)/gms);
-    if (matches) {
-      const newVariables = matches.map(match => match.trim());
-      variables = [...variables, ...newVariables];
+    if (document) {
+      const content = document.getText();
+      const variableRegex = /"[a-zA-Z]\w*"/g;
+      variables = [];
+
+      let match;
+      while ((match = variableRegex.exec(content)) !== null) {
+        variables.push(match[0]);
+      }
+
+      // Do something with the updated variables list
+      console.log("Updated variables:", variables);
     }
   });
-  
+
   documents.listen(connection);
   connection.listen();
-  
+    
