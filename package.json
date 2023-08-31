@@ -2,7 +2,7 @@
   "name": "solidworks",
   "displayName": "Solidworks",
   "description": "Extension for editing solidworks equations",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.71.0"
   },
