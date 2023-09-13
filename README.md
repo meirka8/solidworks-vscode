@@ -11,6 +11,11 @@ Basic highlighting of
 
 ![Highlighting](examples/screenshots/highlighting.PNG)
 
+Basic linting
+ - detection of undefined variables usage
+ 
+![Undefined](examples/screenshots/linting.PNG)
+
 ## Scope
 
 Extension is preset to work with .eqn file extensions
