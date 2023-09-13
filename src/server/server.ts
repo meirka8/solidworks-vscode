@@ -1,77 +1,47 @@
 import {
-  createConnection,
-  ProposedFeatures,
-  TextDocuments,
-  InitializeParams,
-  TextDocumentSyncKind,
-  InitializeResult,
-} from 'vscode-languageserver/node';
-import { TextDocument } from 'vscode-languageserver-textdocument';
-import * as antlr4 from 'antlr4';
-import * as ts from 'typescript';
-import SolidWorksEquationsLexer from './grammar/SolidWorksEquationsLexer';
-import SolidWorksEquationsParser from './grammar/SolidWorksEquationsParser';
+    createConnection,
+    ProposedFeatures,
+    TextDocuments,
+    InitializeParams,
+    TextDocumentSyncKind,
+    InitializeResult,
+    DidChangeTextDocumentParams,
+  } from 'vscode-languageserver/node';
+  import { TextDocument } from 'vscode-languageserver-textdocument';
+  
+  const connection = createConnection(ProposedFeatures.all);
+  console.log('Server started!');
+  const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
+  let variables: string[] = [];
 
-const connection = createConnection(ProposedFeatures.all);
-const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
+  connection.onInitialize((_params: InitializeParams) => {
+    const result: InitializeResult = {
+      capabilities: {
+        textDocumentSync: TextDocumentSyncKind.Incremental,
+      },
+    };
+    return result;
+  });
+  
+  // Listen for changes to the text document and update the list of variables
+  connection.onDidChangeTextDocument((params: DidChangeTextDocumentParams) => {
+    const document = documents.get(params.textDocument.uri);
 
-let variableDeclarations: { [key: string]: string[] } = {};
+    if (document) {
+      const content = document.getText();
+      const variableRegex = /"[a-zA-Z]\w*"/g;
+      variables = [];
 
-connection.onInitialize((_params: InitializeParams) => {
-  const result: InitializeResult = {
-    capabilities: {
-      textDocumentSync: TextDocumentSyncKind.Incremental,
-    },
-  };
-  return result;
-});
+      let match;
+      while ((match = variableRegex.exec(content)) !== null) {
+        variables.push(match[0]);
+      }
 
-documents.onDidChangeContent((change) => {
-  const charStream = antlr4.CharStreams.fromString(change.document.getText());
-  const lexer = new SolidWorksEquationsLexer(charStream);
-  const parser = new SolidWorksEquationsParser(new antlr4.CommonTokenStream(lexer));
-  const tree = parser.equation();
-
-  const sourceFile = ts.createSourceFile(
-    'temp.ts',
-    tree.toStringTree(parser.ruleNames, parser),
-    ts.ScriptTarget.Latest,
-    /*setParentNodes */ true
-  );
-
-  const fileName = change.document.uri.slice(7); // remove "file://" prefix
-  variableDeclarations[fileName] = [];
-  ts.forEachChild(sourceFile, (node) => {
-    console.log(node);
-    if (ts.isVariableDeclaration(node)) {
-      variableDeclarations[fileName].push(node.name.getText());
+      // Do something with the updated variables list
+      console.log("Updated variables:", variables);
     }
   });
-});
 
-connection.onRequest('updateDocument', (params) => {
-  const fileName = params.fileName;
-  const text = params.text;
-  const sourceFile = ts.createSourceFile(
-    fileName,
-    text,
-    ts.ScriptTarget.Latest,
-    /*setParentNodes */ true
-  );
-
-  variableDeclarations[fileName] = [];
-  ts.forEachChild(sourceFile, (node) => {
-    if (ts.isVariableDeclaration(node)) {
-      variableDeclarations[fileName].push(node.name.getText());
-    }
-  });
-  console.log(variableDeclarations);
-});
-
-connection.onRequest('getVariableDeclarations', (params) => {
-  const fileName = params.fileName;
-  return variableDeclarations[fileName] || [];
-});
-
-documents.listen(connection);
-connection.listen();
+  documents.listen(connection);
+  connection.listen();
+    
