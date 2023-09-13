@@ -1,7 +1,9 @@
 from pygls.server import LanguageServer
-from pygls.features import TEXT_DOCUMENT_DID_CHANGE
+from lsprotocol.types import TEXT_DOCUMENT_DID_CHANGE
 
-ls = LanguageServer()
+import re
+
+ls = LanguageServer( name='pygls-example', version='0.0.1' )
 
 @ls.feature(TEXT_DOCUMENT_DID_CHANGE)
 async def on_text_document_did_change(ls, params):
