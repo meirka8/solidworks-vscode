@@ -1,3 +1,5 @@
+const cp = require('child_process');
+import { ExecException } from 'child_process';
 import * as vscode from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
 
@@ -10,14 +12,38 @@ interface VariableLocation {
   end: number;
 }
 
+async function checkPyglsInstalled(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    cp.exec('python -c "import pygls"', (error: ExecException | null, stdout: string, stderr: string) => {
+      if (error) {
+        reject(new Error('pygls is not installed'));
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
 
 export function activate(context: vscode.ExtensionContext): void {
   try {
+    // Check if pygls is installed
+    cp.exec('python -c "import pygls"', (error: ExecException | null, stdout: string, stderr: string) => {
+      if (error) {
+        // pygls is not installed, show a message to the user
+        vscode.window.showErrorMessage('The extension requires pygls to be installed. Please install it by running `pip install pygls`.');
+        return;
+      }
+    }
+    );
+
     // Server options for the Python language server
+    const serverScript = context.asAbsolutePath('./src/server/server.py');
+
     const serverOptions: ServerOptions = {
-      run: { command: 'python', args: ['-m', './src/server/server.py'], transport: TransportKind.stdio },
-      debug: { command: 'python', args: ['-m', './src/server/server.py'], transport: TransportKind.stdio }
-    };
+      run: { command: 'python', args: [serverScript], transport: TransportKind.stdio },
+      debug: { command: 'python', args: [serverScript], transport: TransportKind.stdio }
+    };  
   
     const clientOptions: LanguageClientOptions = {
       documentSelector: [{ scheme: 'file', language: 'solidworks-equations' }],
@@ -29,15 +55,7 @@ export function activate(context: vscode.ExtensionContext): void {
   
     client = new LanguageClient('solidworksEquationsHighlighter', 'SolidWorks Equations Highlighter', serverOptions, clientOptions);
 
-    client.start().then(() => {
-      vscode.workspace.onDidChangeTextDocument((event) => {
-        const document = event.document;
-        const filePath = document.uri.fsPath;
-        const fileName = filePath.slice(filePath.lastIndexOf('/') + 1);
-
-        client.sendRequest('updateDocument', { fileName, text: document.getText() });
-      });
-    });
+    client.start();
   } catch (error) {
     vscode.window.showErrorMessage('Could not start the language server. Some features may not work as expected.');
     console.error('Language server startup error:', error);
