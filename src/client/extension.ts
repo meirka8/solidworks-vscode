@@ -15,8 +15,8 @@ export function activate(context: vscode.ExtensionContext): void {
   const serverModule = context.asAbsolutePath('out/server/server.js');
   const debugOptions = { execArgv: ['--nolazy', '--inspect=6009'] };
   const serverOptions: ServerOptions = {
-    run: { module: serverModule, transport: TransportKind.ipc },
-    debug: { module: serverModule, transport: TransportKind.ipc, options: debugOptions },
+    run: { command: 'python', args: ['-m', 'your_python_language_server'], transport: TransportKind.stdio },
+    debug: { command: 'python', args: ['-m', 'your_python_language_server'], transport: TransportKind.stdio }
   };
 
   const clientOptions: LanguageClientOptions = {
