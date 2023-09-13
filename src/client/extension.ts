@@ -12,23 +12,36 @@ interface VariableLocation {
 
 
 export function activate(context: vscode.ExtensionContext): void {
-  const serverModule = context.asAbsolutePath('out/server/server.js');
-  const debugOptions = { execArgv: ['--nolazy', '--inspect=6009'] };
-  const serverOptions: ServerOptions = {
-    run: { command: 'python', args: ['-m', 'your_python_language_server'], transport: TransportKind.stdio },
-    debug: { command: 'python', args: ['-m', 'your_python_language_server'], transport: TransportKind.stdio }
-  };
+  try {
+    // Server options for the Python language server
+    const serverOptions: ServerOptions = {
+      run: { command: 'python3', args: ['-m', 'your_python_language_server'], transport: TransportKind.stdio },
+      debug: { command: 'python3', args: ['-m', 'your_python_language_server'], transport: TransportKind.stdio }
+    };
+  
+    const clientOptions: LanguageClientOptions = {
+      documentSelector: [{ scheme: 'file', language: 'solidworks-equations' }],
+      synchronize: {
+        configurationSection: 'solidworksEquationsHighlighter',
+        fileEvents: vscode.workspace.createFileSystemWatcher('**/.eqn'),
+      },
+    };
+  
+    client = new LanguageClient('solidworksEquationsHighlighter', 'SolidWorks Equations Highlighter', serverOptions, clientOptions);
 
-  const clientOptions: LanguageClientOptions = {
-    documentSelector: [{ scheme: 'file', language: 'solidworks-equations' }],
-    synchronize: {
-      configurationSection: 'solidworksEquationsHighlighter',
-      fileEvents: vscode.workspace.createFileSystemWatcher('**/.eqn'),
-    },
-  };
+    client.start().then(() => {
+      vscode.workspace.onDidChangeTextDocument((event) => {
+        const document = event.document;
+        const filePath = document.uri.fsPath;
+        const fileName = filePath.slice(filePath.lastIndexOf('/') + 1);
 
-  client = new LanguageClient('solidworksEquationsHighlighter', 'SolidWorks Equations Highlighter', serverOptions, clientOptions);
-
+        client.sendRequest('updateDocument', { fileName, text: document.getText() });
+      });
+    });
+  } catch (error) {
+    vscode.window.showErrorMessage('Could not start the language server. Some features may not work as expected.');
+    console.error('Language server startup error:', error);
+  }
    // Initialize diagnostics
   const diagnosticCollection = vscode.languages.createDiagnosticCollection('solidworks-equations');
 
@@ -66,16 +79,6 @@ export function activate(context: vscode.ExtensionContext): void {
       diagnosticCollection.set(document.uri, diagnostics);
     })
   );
-
-  client.start().then(() => {
-    vscode.workspace.onDidChangeTextDocument((event) => {
-      const document = event.document;
-      const filePath = document.uri.fsPath;
-      const fileName = filePath.slice(filePath.lastIndexOf('/') + 1);
-
-      client.sendRequest('updateDocument', { fileName, text: document.getText() });
-    });
-  });
 }
 
 function getVariables(document: vscode.TextDocument, regex: RegExp): VariableLocation[] {
