@@ -15,8 +15,8 @@ export function activate(context: vscode.ExtensionContext): void {
   try {
     // Server options for the Python language server
     const serverOptions: ServerOptions = {
-      run: { command: 'python3', args: ['-m', 'your_python_language_server'], transport: TransportKind.stdio },
-      debug: { command: 'python3', args: ['-m', 'your_python_language_server'], transport: TransportKind.stdio }
+      run: { command: 'python', args: ['-m', './src/server/server.py'], transport: TransportKind.stdio },
+      debug: { command: 'python', args: ['-m', './src/server/server.py'], transport: TransportKind.stdio }
     };
   
     const clientOptions: LanguageClientOptions = {
