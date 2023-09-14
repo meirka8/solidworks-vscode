@@ -1,14 +1,8 @@
 import * as vscode from 'vscode';
+import { SolidworksEquationsDefinitionProvider, getVariables, varRegex, varUsageRegex } from './definition_provider';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient/node';
 
 let client: LanguageClient;
-
-interface VariableLocation {
-  name: string;
-  line: number;
-  start: number;
-  end: number;
-}
 
 
 export function activate(context: vscode.ExtensionContext): void {
@@ -31,7 +25,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
   client.start();
 
-   // Initialize diagnostics
+  // Initialize diagnostics
   const diagnosticCollection = vscode.languages.createDiagnosticCollection('solidworks-equations');
 
   context.subscriptions.push(
@@ -39,59 +33,36 @@ export function activate(context: vscode.ExtensionContext): void {
       const diagnostics: vscode.Diagnostic[] = [];
       const document = event.document;
 
-      // Regular expression for variable definition
-      const varRegex = /^("[a-zA-Z]\w*")\s*=/gm;
-
-      // Regular expression for variable usage (this is just an example)
-      const varUsageRegex = /(?<=\S.*)("[a-zA-Z]\w*")/g;
-
-
       // Assume you have some way to get all defined and used variables
       const definedVariableLocations = getVariables(document, varRegex);
       const usedVariableLocations = getVariables(document, varUsageRegex);
-      
+
       const definedVariableNames = definedVariableLocations.map(v => v.name);
-      
+
       for (const usedVar of usedVariableLocations) {
-          if (!definedVariableNames.includes(usedVar.name)) {
-              const diagnostic: vscode.Diagnostic = {
-                  severity: vscode.DiagnosticSeverity.Error,
-                  range: new vscode.Range(new vscode.Position(usedVar.line, usedVar.start), new vscode.Position(usedVar.line, usedVar.end)),
-                  message: `Undefined variable ${usedVar.name}`,
-                  source: 'solidworks-equations'
-              };
-              diagnostics.push(diagnostic);
-          }
+        if (!definedVariableNames.includes(usedVar.name)) {
+          const diagnostic: vscode.Diagnostic = {
+            severity: vscode.DiagnosticSeverity.Error,
+            range: new vscode.Range(new vscode.Position(usedVar.line, usedVar.start), new vscode.Position(usedVar.line, usedVar.end)),
+            message: `Undefined variable ${usedVar.name}`,
+            source: 'solidworks-equations'
+          };
+          diagnostics.push(diagnostic);
+        }
       }
 
       // Set the diagnostics
       diagnosticCollection.set(document.uri, diagnostics);
     })
   );
+
+  const provider = new SolidworksEquationsDefinitionProvider();
+  const selector = { scheme: 'file', language: 'solidworks-equations' };
+  const disposable = vscode.languages.registerDefinitionProvider(selector, provider);
+  context.subscriptions.push(disposable);
+
 }
 
-function getVariables(document: vscode.TextDocument, regex: RegExp): VariableLocation[] {
-  const text = document.getText();
-  let match;
-  const variables: VariableLocation[] = [];
-
-  while ((match = regex.exec(text)) !== null) {
-      const line = document.positionAt(match.index).line;
-      const start = document.positionAt(match.index).character;
-      
-      // Use match[1] instead of match[0] to get only the captured variable name
-      const end = start + match[1].length; 
-
-      variables.push({
-          name: match[1], // Use match[1] to get only the variable name
-          line,
-          start,
-          end
-      });
-  }
-
-  return variables;
-}
 
 
 export function deactivate(): Thenable<void> | undefined {
