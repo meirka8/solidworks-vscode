@@ -16,6 +16,9 @@ Basic linting
  
 ![Undefined](examples/screenshots/linting.PNG)
 
+ - jumping to variable definition
+![Jump to Definition](examples/screenshots/jump_to_definition.PNG)
+
 ## Scope
 
 Extension is preset to work with .eqn file extensions
