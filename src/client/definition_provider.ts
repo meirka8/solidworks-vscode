@@ -52,16 +52,20 @@ export class SolidworksEquationsDefinitionProvider implements vscode.DefinitionP
 
 
         // Expand the range to include surrounding quotation marks, if any
-        const startCharacter = range.start.character;
-        const endCharacter = range.end.character;
+        let startCharacter = range.start.character;
+        let endCharacter = range.end.character;
 
-        if (document.getText(new vscode.Range(new vscode.Position(range.start.line, startCharacter - 1), new vscode.Position(range.start.line, startCharacter))) === '"') {
-            range = new vscode.Range(new vscode.Position(range.start.line, startCharacter - 1), new vscode.Position(range.end.line, endCharacter));
+        const leadingCharacter = document.getText(new vscode.Range(new vscode.Position(range.start.line, startCharacter - 1), new vscode.Position(range.start.line, startCharacter)));
+        if (leadingCharacter === '"') {
+            startCharacter--;
         }
 
-        if (document.getText(new vscode.Range(new vscode.Position(range.end.line, endCharacter), new vscode.Position(range.end.line, endCharacter + 1))) === '"') {
-            range = new vscode.Range(new vscode.Position(range.start.line, startCharacter), new vscode.Position(range.end.line, endCharacter + 1));
+        const trailingCharacter = document.getText(new vscode.Range(new vscode.Position(range.end.line, endCharacter), new vscode.Position(range.end.line, endCharacter + 1)));
+        if (trailingCharacter === '"') {
+            endCharacter++;
         }
+
+        range = new vscode.Range(new vscode.Position(range.start.line, startCharacter), new vscode.Position(range.end.line, endCharacter));
 
 
         const name = document.getText(range);
