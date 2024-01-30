@@ -29,6 +29,28 @@
 		  "${workspaceFolder}/out/test/**/*.js"
 		],
 		"preLaunchTask": "${defaultBuildTask}"
+	  },
+	  {
+		"name": "Attach to Python Server",
+		"type": "python",
+		"request": "attach",
+		"port": 5678,
+		"host": "localhost",
+		"pathMappings": [
+		  {
+			"localRoot": "${workspaceFolder}/server",
+			"remoteRoot": "."
+		  }
+		]
+	  }
+	],
+	"compounds": [
+	  {
+		"name": "Client + Server",
+		"configurations": [
+		  "Launch Extension",
+		  "Attach to Python Server"
+		]
 	  }
 	]
   }

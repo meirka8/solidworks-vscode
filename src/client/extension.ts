@@ -41,9 +41,9 @@ export function activate(context: vscode.ExtensionContext): void {
     const serverScript = context.asAbsolutePath('./src/server/server.py');
 
     const serverOptions: ServerOptions = {
-      run: { command: 'python', args: [serverScript], transport: TransportKind.stdio },
-      debug: { command: 'python', args: [serverScript], transport: TransportKind.stdio }
-    };  
+      run: { command: 'python', args: ['-m', 'debugpy.adapter', '--port', '5678', serverScript], transport: TransportKind.stdio },
+      debug: { command: 'python', args: ['-m', 'debugpy.adapter', '--port', '5678', serverScript], transport: TransportKind.stdio }
+    }; 
   
     const clientOptions: LanguageClientOptions = {
       documentSelector: [{ scheme: 'file', language: 'solidworks-equations' }],
