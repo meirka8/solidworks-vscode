@@ -34,7 +34,16 @@
         "scopeName": "source.solidworks-equations",
         "path": "./syntaxes/solidworks-equations.tmLanguage.json"
       }
-    ]
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "variableDefinitions",
+          "name": "Variable Definitions",
+          "icon": "icon_side.png"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
