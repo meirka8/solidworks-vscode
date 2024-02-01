@@ -52,7 +52,20 @@ export function activate(context: vscode.ExtensionContext): void {
   const diagnosticCollection = vscode.languages.createDiagnosticCollection(
     "solidworks-equations"
   );
-  const variableDefinitionProvider = new VariableDefinitionProvider([]);
+  const diagnostics: vscode.Diagnostic[] = [];
+
+  // get variables on startup
+  const editor = vscode.window.activeTextEditor;
+  const document = editor?.document;
+
+  let definedVariableDefinitions: VariableDefinition[] = [];
+  if (document) {
+    definedVariableDefinitions = diagnoseVariables(document, diagnostics);
+    diagnosticCollection.set(document.uri, diagnostics);
+  }
+  const variableDefinitionProvider = new VariableDefinitionProvider(
+    definedVariableDefinitions
+  );
   vscode.window.registerTreeDataProvider(
     "variableDefinitions",
     variableDefinitionProvider
@@ -64,20 +77,9 @@ export function activate(context: vscode.ExtensionContext): void {
         const diagnostics: vscode.Diagnostic[] = [];
         const document = event.document;
 
-        const definedVariableLocations = getVariables(document, varRegex);
-        const usedVariableLocations = getVariables(document, varUsageRegex);
-        const definedVariableNames = definedVariableLocations.map(
-          (v) => v.name
-        );
-
-        diagnoseUndefinedVariables(
-          usedVariableLocations,
-          definedVariableNames,
+        const definedVariableDefinitions = diagnoseVariables(
+          document,
           diagnostics
-        );
-
-        const definedVariableDefinitions = definedVariableLocations.map(
-          VariableDefinition.fromVariableLocation
         );
         variableDefinitionProvider.update(definedVariableDefinitions);
 
@@ -108,6 +110,26 @@ export function activate(context: vscode.ExtensionContext): void {
   const disposableEquationsDefinition =
     vscode.languages.registerDefinitionProvider(selector, provider);
   context.subscriptions.push(disposableEquationsDefinition);
+}
+
+function diagnoseVariables(
+  document: vscode.TextDocument,
+  diagnostics: vscode.Diagnostic[]
+) {
+  const definedVariableLocations = getVariables(document, varRegex);
+  const usedVariableLocations = getVariables(document, varUsageRegex);
+  const definedVariableNames = definedVariableLocations.map((v) => v.name);
+
+  diagnoseUndefinedVariables(
+    usedVariableLocations,
+    definedVariableNames,
+    diagnostics
+  );
+
+  const definedVariableDefinitions = definedVariableLocations.map(
+    VariableDefinition.fromVariableLocation
+  );
+  return definedVariableDefinitions;
 }
 
 function diagnoseUndefinedVariables(
