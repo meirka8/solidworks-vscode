@@ -77,14 +77,7 @@ export function activate(context: vscode.ExtensionContext): void {
         );
 
         const definedVariableDefinitions = definedVariableLocations.map(
-          (v) =>
-            new VariableDefinition(
-              v.name,
-              v.line,
-              v.start,
-              v.end,
-              vscode.TreeItemCollapsibleState.None
-            )
+          VariableDefinition.fromVariableLocation
         );
         variableDefinitionProvider.update(definedVariableDefinitions);
 

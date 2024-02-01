@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { VariableLocation } from "./definition_provider";
 
 export class VariableDefinitionProvider
   implements vscode.TreeDataProvider<VariableDefinition>
@@ -50,4 +51,17 @@ export class VariableDefinition extends vscode.TreeItem {
   }
 
   contextValue = "variableDefinition";
+
+  // factory from VariableLocation
+  static fromVariableLocation(
+    variableLocation: VariableLocation
+  ): VariableDefinition {
+    return new VariableDefinition(
+      variableLocation.name,
+      variableLocation.line,
+      variableLocation.start,
+      variableLocation.end,
+      vscode.TreeItemCollapsibleState.None
+    );
+  }
 }
