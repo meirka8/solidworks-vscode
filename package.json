@@ -10,7 +10,8 @@
     "Programming Languages"
   ],
   "activationEvents": [
-    "onLanguage:solidworks-equations"
+    "onLanguage:solidworks-equations",
+    "*"
   ],
   "main": "./out/client/extension.js",
   "contributes": {
@@ -35,12 +36,20 @@
         "path": "./syntaxes/solidworks-equations.tmLanguage.json"
       }
     ],
+    "viewsContainers": {
+      "activityBar": [
+      {
+        "id": "solidworks",
+        "title": "Solidworks",
+        "icon": "./icon_side.png"
+      }
+    ]},
     "views": {
-      "explorer": [
+      "solidworks": [
         {
           "id": "variableDefinitions",
           "name": "Variable Definitions",
-          "icon": "icon_side.png"
+          "icon": "./icon_side.png"
         }
       ]
     }

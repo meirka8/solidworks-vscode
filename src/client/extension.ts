@@ -60,57 +60,61 @@ export function activate(context: vscode.ExtensionContext): void {
 
   context.subscriptions.push(
     vscode.workspace.onDidChangeTextDocument(function (event): void {
-      const diagnostics: vscode.Diagnostic[] = [];
-      const document = event.document;
+      try {
+        const diagnostics: vscode.Diagnostic[] = [];
+        const document = event.document;
 
-      const definedVariableLocations = getVariables(document, varRegex);
-      const usedVariableLocations = getVariables(document, varUsageRegex);
-      const definedVariableNames = definedVariableLocations.map((v) => v.name);
+        const definedVariableLocations = getVariables(document, varRegex);
+        const usedVariableLocations = getVariables(document, varUsageRegex);
+        const definedVariableNames = definedVariableLocations.map(
+          (v) => v.name
+        );
 
-      diagnoseUndefinedVariables(
-        usedVariableLocations,
-        definedVariableNames,
-        diagnostics
-      );
+        diagnoseUndefinedVariables(
+          usedVariableLocations,
+          definedVariableNames,
+          diagnostics
+        );
 
-      const definedVariableDefinitions = definedVariableLocations.map(
-        (v) =>
-          new VariableDefinition(
-            v.name,
-            v.line,
-            v.start,
-            v.end,
-            vscode.TreeItemCollapsibleState.None
-          )
-      );
-      variableDefinitionProvider.update(definedVariableDefinitions);
+        const definedVariableDefinitions = definedVariableLocations.map(
+          (v) =>
+            new VariableDefinition(
+              v.name,
+              v.line,
+              v.start,
+              v.end,
+              vscode.TreeItemCollapsibleState.None
+            )
+        );
+        variableDefinitionProvider.update(definedVariableDefinitions);
 
-      let disposable = vscode.commands.registerCommand(
-        "extension.jumpToVariableDefinition",
-        (variableDefinition: VariableDefinition) => {
-          const editor = vscode.window.activeTextEditor;
-          if (editor) {
-            let range = editor.document.lineAt(variableDefinition.line).range;
-            editor.selection = new vscode.Selection(range.start, range.end);
-            editor.revealRange(range);
-          }
-        }
-      );
-
-      context.subscriptions.push(disposable);
-
-      // Set the diagnostics
-      diagnosticCollection.set(document.uri, diagnostics);
+        // Set the diagnostics
+        diagnosticCollection.set(document.uri, diagnostics);
+      } catch (e) {
+        console.error("Error handling onDidChangeTextDocument event:", e);
+      }
     })
   );
 
+  const disposableVariableDefinition = vscode.commands.registerCommand(
+    "extension.jumpToVariableDefinition",
+    (variableDefinition: VariableDefinition) => {
+      const editor = vscode.window.activeTextEditor;
+      if (editor) {
+        let range = editor.document.lineAt(variableDefinition.line).range;
+        editor.selection = new vscode.Selection(range.start, range.end);
+        editor.revealRange(range);
+      }
+    }
+  );
+
+  context.subscriptions.push(disposableVariableDefinition);
+
   const provider = new SolidworksEquationsDefinitionProvider();
   const selector = { scheme: "file", language: "solidworks-equations" };
-  const disposable = vscode.languages.registerDefinitionProvider(
-    selector,
-    provider
-  );
-  context.subscriptions.push(disposable);
+  const disposableEquationsDefinition =
+    vscode.languages.registerDefinitionProvider(selector, provider);
+  context.subscriptions.push(disposableEquationsDefinition);
 }
 
 function diagnoseUndefinedVariables(
