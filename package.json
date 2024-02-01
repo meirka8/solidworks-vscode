@@ -37,19 +37,18 @@
       }
     ],
     "viewsContainers": {
-      "activityBar": [
+      "activitybar": [
       {
         "id": "solidworks",
         "title": "Solidworks",
-        "icon": "./icon_side.png"
+        "icon": "icon_bw.png"
       }
     ]},
     "views": {
       "solidworks": [
         {
           "id": "variableDefinitions",
-          "name": "Variable Definitions",
-          "icon": "./icon_side.png"
+          "name": "Variable Definitions"
         }
       ]
     }
