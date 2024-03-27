@@ -129,7 +129,9 @@ function diagnoseVariables(
   const definedVariableDefinitions = definedVariableLocations.map(
     VariableDefinition.fromVariableLocation
   );
-  return definedVariableDefinitions;
+  return definedVariableDefinitions.sort((a, b) =>
+    a.name.localeCompare(b.name)
+  );
 }
 
 function diagnoseUndefinedVariables(
