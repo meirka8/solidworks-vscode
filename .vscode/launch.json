@@ -6,31 +6,22 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Launch Extension",
-			"type": "extensionHost",
-			"request": "launch",
-			"runtimeExecutable": "${execPath}",
-			"args": [
-				"--extensionDevelopmentPath=${workspaceFolder}"
-			],
-			"outFiles": [
-				"${workspaceFolder}/out/client/**/*.js"
-			],
-			"preLaunchTask": {
-				"type": "npm",
-				"script": "watch"
-			}
-		},
-		{
-			"name": "Attach to Server",
-			"type": "node",
-			"port": 6009,
-			"restart": true,
-			"request": "attach",
-			"outFiles": [
-				"${workspaceFolder}/out/server/**/*.js"
-			]
-		},
+            "name": "Launch Extension",
+            "type": "extensionHost",
+            "request": "launch",
+            "runtimeExecutable": "${execPath}",
+            "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
+            "outFiles": ["${workspaceFolder}/out/**/*.js"],
+            "preLaunchTask": "${defaultBuildTask}"
+        },
+        {
+            "name": "Launch Server",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/server/server.py",
+            "console": "integratedTerminal",
+			"python": "${command:python.interpreterPath}"
+        },
 		{
 			"name": "Extension Tests",
 			"type": "extensionHost",
@@ -46,12 +37,9 @@
 		}
 	],
 	"compounds": [
-		{
-			"name": "Client + Server",
-			"configurations": [
-				"Launch Extension",
-				"Attach to Server"
-			]
-		}
-	]
+        {
+            "name": "Launch Extension & Server",
+            "configurations": ["Launch Extension", "Launch Server"]
+        }
+    ]
 }
