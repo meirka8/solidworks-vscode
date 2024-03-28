@@ -1,3 +1,4 @@
+import os
 from pygls.server import LanguageServer
 
 from lsprotocol.types import TEXT_DOCUMENT_DID_OPEN
@@ -20,7 +21,10 @@ def did_change(ls, params):
 
 
 def start_server():
-    ls.start_io()
+    if os.getenv("ENV") == "development":
+        ls.start_tcp(host="127.0.0.1", port=5000)
+    else:
+        ls.start_io()
 
 
 start_server()

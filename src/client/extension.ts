@@ -24,30 +24,33 @@ let client: LanguageClient;
 export function activate(context: vscode.ExtensionContext): void {
   let serverOptions: ServerOptions;
 
-  // if (process.env.ENV === "development") {
-  //   // The server is already running and listening on port 5000
-  //   let connectionInfo = { port: 5000 };
+  if (process.env.ENV === "development") {
+    // The server is already running and listening on port 5000
+    let connectionInfo = { port: 5000 };
 
-  //   serverOptions = () => {
-  //     // Connect to the server via a socket
-  //     let socket = net.connect(connectionInfo);
-  //     let result: StreamInfo = {
-  //       writer: socket,
-  //       reader: socket,
-  //     };
-  //     return Promise.resolve(result);
-  //   };
-  // } else {
-  // The server is implemented in Python
-  let serverCommand = "python";
-  let serverArgs = [context.asAbsolutePath("src/server/server.py"), "--stdio"];
+    serverOptions = () => {
+      // Connect to the server via a socket
+      let socket = net.connect(connectionInfo);
+      let result: StreamInfo = {
+        writer: socket,
+        reader: socket,
+      };
+      return Promise.resolve(result);
+    };
+  } else {
+    // The server is implemented in Python
+    let serverCommand = "python";
+    let serverArgs = [
+      context.asAbsolutePath("src/server/server.py"),
+      "--stdio",
+    ];
 
-  serverOptions = {
-    command: serverCommand,
-    args: serverArgs,
-    transport: TransportKind.stdio,
-  };
-  // }
+    serverOptions = {
+      command: serverCommand,
+      args: serverArgs,
+      transport: TransportKind.stdio,
+    };
+  }
 
   // Options to control the language client
   let clientOptions: LanguageClientOptions = {
