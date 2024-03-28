@@ -12,7 +12,10 @@
             "runtimeExecutable": "${execPath}",
             "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
             "outFiles": ["${workspaceFolder}/out/**/*.js"],
-            "preLaunchTask": "${defaultBuildTask}"
+            "preLaunchTask": "${defaultBuildTask}",
+			"env": {
+				"ENV": "development"
+			}
         },
         {
             "name": "Launch Server",
@@ -39,7 +42,7 @@
 	"compounds": [
         {
             "name": "Launch Extension & Server",
-            "configurations": ["Launch Extension", "Launch Server"]
+            "configurations": ["Launch Server", "Launch Extension"]
         }
     ]
 }

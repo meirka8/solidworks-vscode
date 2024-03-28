@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import * as net from "net";
 import {
   SolidworksEquationsDefinitionProvider,
   getVariables,
@@ -10,6 +11,7 @@ import {
   LanguageClient,
   LanguageClientOptions,
   ServerOptions,
+  StreamInfo,
   TransportKind,
 } from "vscode-languageclient/node";
 import {
@@ -20,28 +22,43 @@ import {
 let client: LanguageClient;
 
 export function activate(context: vscode.ExtensionContext): void {
-  const serverModule = context.asAbsolutePath("out/server/server.js");
-  const debugOptions = { execArgv: ["--nolazy", "--inspect=6009"] };
-  const serverOptions: ServerOptions = {
-    run: { module: serverModule, transport: TransportKind.ipc },
-    debug: {
-      module: serverModule,
-      transport: TransportKind.ipc,
-      options: debugOptions,
-    },
+  let serverOptions: ServerOptions;
+
+  if (process.env.ENV === "development") {
+    // The server is already running and listening on port 5000
+    let connectionInfo = { port: 5000 };
+
+    serverOptions = () => {
+      // Connect to the server via a socket
+      let socket = net.connect(connectionInfo);
+      let result: StreamInfo = {
+        writer: socket,
+        reader: socket,
+      };
+      return Promise.resolve(result);
+    };
+  } else {
+    // The server is implemented in Python
+    let serverCommand = "src/server/server.py";
+    let serverArgs = ["--stdio"];
+
+    serverOptions = {
+      command: serverCommand,
+      args: serverArgs,
+      transport: TransportKind.stdio,
+    };
+  }
+
+  // Options to control the language client
+  let clientOptions: LanguageClientOptions = {
+    // Register the server for plain text documents
+    documentSelector: [{ scheme: "file", language: "plaintext" }],
   };
 
-  const clientOptions: LanguageClientOptions = {
-    documentSelector: [{ scheme: "file", language: "solidworks-equations" }],
-    synchronize: {
-      configurationSection: "solidworksEquationsHighlighter",
-      fileEvents: vscode.workspace.createFileSystemWatcher("**/.eqn"),
-    },
-  };
-
+  // Create and start the language client
   client = new LanguageClient(
-    "solidworksEquationsHighlighter",
-    "SolidWorks Equations Highlighter",
+    "languageServerExample",
+    "Language Server Example",
     serverOptions,
     clientOptions
   );
