@@ -26,7 +26,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
   if (process.env.ENV === "development") {
     // The server is already running and listening on port 5000
-    let connectionInfo = { port: 5000 };
+    let connectionInfo = { port: 5000, host: "127.0.0.1" };
 
     serverOptions = () => {
       // Connect to the server via a socket
@@ -55,7 +55,7 @@ export function activate(context: vscode.ExtensionContext): void {
   // Options to control the language client
   let clientOptions: LanguageClientOptions = {
     // Register the server for plain text documents
-    documentSelector: [{ scheme: "file", language: "plaintext" }],
+    documentSelector: [{ scheme: "file", language: "solidworks-equations" }],
   };
 
   // Create and start the language client
