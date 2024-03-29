@@ -6,3 +6,5 @@ node_modules
 archive
 equations.eqn
 venv
+common_data
+debug_draft*
