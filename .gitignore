@@ -8,3 +8,5 @@ equations.eqn
 venv
 common_data
 debug_draft*
+.antlr
+__pycache__
