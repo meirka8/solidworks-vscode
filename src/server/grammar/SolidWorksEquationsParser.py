@@ -10,22 +10,17 @@ else:
 
 def serializedATN():
     return [
-        4,1,14,50,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,1,0,4,0,12,8,0,
-        11,0,12,0,13,1,1,1,1,3,1,18,8,1,1,2,1,2,1,2,1,2,1,2,1,3,1,3,1,3,
-        1,3,1,3,1,3,1,3,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,3,4,40,8,4,1,4,1,
-        4,1,4,5,4,45,8,4,10,4,12,4,48,9,4,1,4,0,1,8,5,0,2,4,6,8,0,1,1,0,
-        6,9,50,0,11,1,0,0,0,2,17,1,0,0,0,4,19,1,0,0,0,6,24,1,0,0,0,8,39,
-        1,0,0,0,10,12,3,2,1,0,11,10,1,0,0,0,12,13,1,0,0,0,13,11,1,0,0,0,
-        13,14,1,0,0,0,14,1,1,0,0,0,15,18,3,4,2,0,16,18,3,6,3,0,17,15,1,0,
-        0,0,17,16,1,0,0,0,18,3,1,0,0,0,19,20,5,13,0,0,20,21,5,1,0,0,21,22,
-        3,8,4,0,22,23,5,2,0,0,23,5,1,0,0,0,24,25,5,13,0,0,25,26,5,3,0,0,
-        26,27,5,13,0,0,27,28,5,1,0,0,28,29,3,8,4,0,29,30,5,2,0,0,30,7,1,
-        0,0,0,31,32,6,4,-1,0,32,40,5,10,0,0,33,40,5,11,0,0,34,40,5,13,0,
-        0,35,36,5,4,0,0,36,37,3,8,4,0,37,38,5,5,0,0,38,40,1,0,0,0,39,31,
-        1,0,0,0,39,33,1,0,0,0,39,34,1,0,0,0,39,35,1,0,0,0,40,46,1,0,0,0,
-        41,42,10,1,0,0,42,43,7,0,0,0,43,45,3,8,4,2,44,41,1,0,0,0,45,48,1,
-        0,0,0,46,44,1,0,0,0,46,47,1,0,0,0,47,9,1,0,0,0,48,46,1,0,0,0,4,13,
-        17,39,46
+        4,1,11,35,2,0,7,0,2,1,7,1,2,2,7,2,1,0,1,0,1,0,1,0,1,1,1,1,1,1,1,
+        1,1,1,1,1,1,1,1,1,3,1,19,8,1,1,1,1,1,1,1,1,1,1,1,1,1,5,1,27,8,1,
+        10,1,12,1,30,9,1,1,2,1,2,1,2,1,2,0,1,2,3,0,2,4,0,2,1,0,4,5,1,0,6,
+        7,36,0,6,1,0,0,0,2,18,1,0,0,0,4,31,1,0,0,0,6,7,5,10,0,0,7,8,5,3,
+        0,0,8,9,3,2,1,0,9,1,1,0,0,0,10,11,6,1,-1,0,11,12,5,1,0,0,12,13,3,
+        2,1,0,13,14,5,2,0,0,14,19,1,0,0,0,15,19,3,4,2,0,16,19,5,10,0,0,17,
+        19,5,8,0,0,18,10,1,0,0,0,18,15,1,0,0,0,18,16,1,0,0,0,18,17,1,0,0,
+        0,19,28,1,0,0,0,20,21,10,6,0,0,21,22,7,0,0,0,22,27,3,2,1,7,23,24,
+        10,5,0,0,24,25,7,1,0,0,25,27,3,2,1,6,26,20,1,0,0,0,26,23,1,0,0,0,
+        27,30,1,0,0,0,28,26,1,0,0,0,28,29,1,0,0,0,29,3,1,0,0,0,30,28,1,0,
+        0,0,31,32,5,8,0,0,32,33,5,9,0,0,33,5,1,0,0,0,3,18,26,28
     ]
 
 class SolidWorksEquationsParser ( Parser ):
@@ -38,38 +33,31 @@ class SolidWorksEquationsParser ( Parser ):
 
     sharedContextCache = PredictionContextCache()
 
-    literalNames = [ "<INVALID>", "'='", "';'", "'@'", "'('", "')'", "'*'", 
-                     "'/'", "'+'", "'-'" ]
+    literalNames = [ "<INVALID>", "'('", "')'", "'='", "'*'", "'/'", "'+'", 
+                     "'-'" ]
 
-    symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "<INVALID>", "<INVALID>", 
-                      "<INVALID>", "<INVALID>", "ID", "NUMBER", "UNIT", 
-                      "STRING", "WS" ]
+    symbolicNames = [ "<INVALID>", "<INVALID>", "<INVALID>", "EQUALS", "MULTIPLY", 
+                      "DIVIDE", "ADD", "SUBTRACT", "NUMBER", "UNIT", "VARIABLE", 
+                      "WS" ]
 
-    RULE_equations = 0
-    RULE_equation = 1
-    RULE_variableDeclaration = 2
-    RULE_propertyAssignment = 3
-    RULE_expression = 4
+    RULE_variableDefinition = 0
+    RULE_expression = 1
+    RULE_measurement = 2
 
-    ruleNames =  [ "equations", "equation", "variableDeclaration", "propertyAssignment", 
-                   "expression" ]
+    ruleNames =  [ "variableDefinition", "expression", "measurement" ]
 
     EOF = Token.EOF
     T__0=1
     T__1=2
-    T__2=3
-    T__3=4
-    T__4=5
-    T__5=6
-    T__6=7
-    T__7=8
-    T__8=9
-    ID=10
-    NUMBER=11
-    UNIT=12
-    STRING=13
-    WS=14
+    EQUALS=3
+    MULTIPLY=4
+    DIVIDE=5
+    ADD=6
+    SUBTRACT=7
+    NUMBER=8
+    UNIT=9
+    VARIABLE=10
+    WS=11
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
@@ -80,221 +68,49 @@ class SolidWorksEquationsParser ( Parser ):
 
 
 
-    class EquationsContext(ParserRuleContext):
+    class VariableDefinitionContext(ParserRuleContext):
         __slots__ = 'parser'
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
             super().__init__(parent, invokingState)
             self.parser = parser
 
-        def equation(self, i:int=None):
-            if i is None:
-                return self.getTypedRuleContexts(SolidWorksEquationsParser.EquationContext)
-            else:
-                return self.getTypedRuleContext(SolidWorksEquationsParser.EquationContext,i)
+        def VARIABLE(self):
+            return self.getToken(SolidWorksEquationsParser.VARIABLE, 0)
 
-
-        def getRuleIndex(self):
-            return SolidWorksEquationsParser.RULE_equations
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterEquations" ):
-                listener.enterEquations(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitEquations" ):
-                listener.exitEquations(self)
-
-
-
-
-    def equations(self):
-
-        localctx = SolidWorksEquationsParser.EquationsContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 0, self.RULE_equations)
-        self._la = 0 # Token type
-        try:
-            self.enterOuterAlt(localctx, 1)
-            self.state = 11 
-            self._errHandler.sync(self)
-            _la = self._input.LA(1)
-            while True:
-                self.state = 10
-                self.equation()
-                self.state = 13 
-                self._errHandler.sync(self)
-                _la = self._input.LA(1)
-                if not (_la==13):
-                    break
-
-        except RecognitionException as re:
-            localctx.exception = re
-            self._errHandler.reportError(self, re)
-            self._errHandler.recover(self, re)
-        finally:
-            self.exitRule()
-        return localctx
-
-
-    class EquationContext(ParserRuleContext):
-        __slots__ = 'parser'
-
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
-            super().__init__(parent, invokingState)
-            self.parser = parser
-
-        def variableDeclaration(self):
-            return self.getTypedRuleContext(SolidWorksEquationsParser.VariableDeclarationContext,0)
-
-
-        def propertyAssignment(self):
-            return self.getTypedRuleContext(SolidWorksEquationsParser.PropertyAssignmentContext,0)
-
-
-        def getRuleIndex(self):
-            return SolidWorksEquationsParser.RULE_equation
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterEquation" ):
-                listener.enterEquation(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitEquation" ):
-                listener.exitEquation(self)
-
-
-
-
-    def equation(self):
-
-        localctx = SolidWorksEquationsParser.EquationContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 2, self.RULE_equation)
-        try:
-            self.state = 17
-            self._errHandler.sync(self)
-            la_ = self._interp.adaptivePredict(self._input,1,self._ctx)
-            if la_ == 1:
-                self.enterOuterAlt(localctx, 1)
-                self.state = 15
-                self.variableDeclaration()
-                pass
-
-            elif la_ == 2:
-                self.enterOuterAlt(localctx, 2)
-                self.state = 16
-                self.propertyAssignment()
-                pass
-
-
-        except RecognitionException as re:
-            localctx.exception = re
-            self._errHandler.reportError(self, re)
-            self._errHandler.recover(self, re)
-        finally:
-            self.exitRule()
-        return localctx
-
-
-    class VariableDeclarationContext(ParserRuleContext):
-        __slots__ = 'parser'
-
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
-            super().__init__(parent, invokingState)
-            self.parser = parser
-
-        def STRING(self):
-            return self.getToken(SolidWorksEquationsParser.STRING, 0)
+        def EQUALS(self):
+            return self.getToken(SolidWorksEquationsParser.EQUALS, 0)
 
         def expression(self):
             return self.getTypedRuleContext(SolidWorksEquationsParser.ExpressionContext,0)
 
 
         def getRuleIndex(self):
-            return SolidWorksEquationsParser.RULE_variableDeclaration
+            return SolidWorksEquationsParser.RULE_variableDefinition
 
         def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterVariableDeclaration" ):
-                listener.enterVariableDeclaration(self)
+            if hasattr( listener, "enterVariableDefinition" ):
+                listener.enterVariableDefinition(self)
 
         def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitVariableDeclaration" ):
-                listener.exitVariableDeclaration(self)
+            if hasattr( listener, "exitVariableDefinition" ):
+                listener.exitVariableDefinition(self)
 
 
 
 
-    def variableDeclaration(self):
+    def variableDefinition(self):
 
-        localctx = SolidWorksEquationsParser.VariableDeclarationContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 4, self.RULE_variableDeclaration)
+        localctx = SolidWorksEquationsParser.VariableDefinitionContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 0, self.RULE_variableDefinition)
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 19
-            self.match(SolidWorksEquationsParser.STRING)
-            self.state = 20
-            self.match(SolidWorksEquationsParser.T__0)
-            self.state = 21
+            self.state = 6
+            self.match(SolidWorksEquationsParser.VARIABLE)
+            self.state = 7
+            self.match(SolidWorksEquationsParser.EQUALS)
+            self.state = 8
             self.expression(0)
-            self.state = 22
-            self.match(SolidWorksEquationsParser.T__1)
-        except RecognitionException as re:
-            localctx.exception = re
-            self._errHandler.reportError(self, re)
-            self._errHandler.recover(self, re)
-        finally:
-            self.exitRule()
-        return localctx
-
-
-    class PropertyAssignmentContext(ParserRuleContext):
-        __slots__ = 'parser'
-
-        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
-            super().__init__(parent, invokingState)
-            self.parser = parser
-
-        def STRING(self, i:int=None):
-            if i is None:
-                return self.getTokens(SolidWorksEquationsParser.STRING)
-            else:
-                return self.getToken(SolidWorksEquationsParser.STRING, i)
-
-        def expression(self):
-            return self.getTypedRuleContext(SolidWorksEquationsParser.ExpressionContext,0)
-
-
-        def getRuleIndex(self):
-            return SolidWorksEquationsParser.RULE_propertyAssignment
-
-        def enterRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "enterPropertyAssignment" ):
-                listener.enterPropertyAssignment(self)
-
-        def exitRule(self, listener:ParseTreeListener):
-            if hasattr( listener, "exitPropertyAssignment" ):
-                listener.exitPropertyAssignment(self)
-
-
-
-
-    def propertyAssignment(self):
-
-        localctx = SolidWorksEquationsParser.PropertyAssignmentContext(self, self._ctx, self.state)
-        self.enterRule(localctx, 6, self.RULE_propertyAssignment)
-        try:
-            self.enterOuterAlt(localctx, 1)
-            self.state = 24
-            self.match(SolidWorksEquationsParser.STRING)
-            self.state = 25
-            self.match(SolidWorksEquationsParser.T__2)
-            self.state = 26
-            self.match(SolidWorksEquationsParser.STRING)
-            self.state = 27
-            self.match(SolidWorksEquationsParser.T__0)
-            self.state = 28
-            self.expression(0)
-            self.state = 29
-            self.match(SolidWorksEquationsParser.T__1)
         except RecognitionException as re:
             localctx.exception = re
             self._errHandler.reportError(self, re)
@@ -312,21 +128,34 @@ class SolidWorksEquationsParser ( Parser ):
             self.parser = parser
             self.op = None # Token
 
-        def ID(self):
-            return self.getToken(SolidWorksEquationsParser.ID, 0)
-
-        def NUMBER(self):
-            return self.getToken(SolidWorksEquationsParser.NUMBER, 0)
-
-        def STRING(self):
-            return self.getToken(SolidWorksEquationsParser.STRING, 0)
-
         def expression(self, i:int=None):
             if i is None:
                 return self.getTypedRuleContexts(SolidWorksEquationsParser.ExpressionContext)
             else:
                 return self.getTypedRuleContext(SolidWorksEquationsParser.ExpressionContext,i)
 
+
+        def measurement(self):
+            return self.getTypedRuleContext(SolidWorksEquationsParser.MeasurementContext,0)
+
+
+        def VARIABLE(self):
+            return self.getToken(SolidWorksEquationsParser.VARIABLE, 0)
+
+        def NUMBER(self):
+            return self.getToken(SolidWorksEquationsParser.NUMBER, 0)
+
+        def MULTIPLY(self):
+            return self.getToken(SolidWorksEquationsParser.MULTIPLY, 0)
+
+        def DIVIDE(self):
+            return self.getToken(SolidWorksEquationsParser.DIVIDE, 0)
+
+        def ADD(self):
+            return self.getToken(SolidWorksEquationsParser.ADD, 0)
+
+        def SUBTRACT(self):
+            return self.getToken(SolidWorksEquationsParser.SUBTRACT, 0)
 
         def getRuleIndex(self):
             return SolidWorksEquationsParser.RULE_expression
@@ -346,65 +175,93 @@ class SolidWorksEquationsParser ( Parser ):
         _parentState = self.state
         localctx = SolidWorksEquationsParser.ExpressionContext(self, self._ctx, _parentState)
         _prevctx = localctx
-        _startState = 8
-        self.enterRecursionRule(localctx, 8, self.RULE_expression, _p)
+        _startState = 2
+        self.enterRecursionRule(localctx, 2, self.RULE_expression, _p)
         self._la = 0 # Token type
         try:
             self.enterOuterAlt(localctx, 1)
-            self.state = 39
+            self.state = 18
             self._errHandler.sync(self)
-            token = self._input.LA(1)
-            if token in [10]:
-                self.state = 32
-                self.match(SolidWorksEquationsParser.ID)
+            la_ = self._interp.adaptivePredict(self._input,0,self._ctx)
+            if la_ == 1:
+                self.state = 11
+                self.match(SolidWorksEquationsParser.T__0)
+                self.state = 12
+                self.expression(0)
+                self.state = 13
+                self.match(SolidWorksEquationsParser.T__1)
                 pass
-            elif token in [11]:
-                self.state = 33
+
+            elif la_ == 2:
+                self.state = 15
+                self.measurement()
+                pass
+
+            elif la_ == 3:
+                self.state = 16
+                self.match(SolidWorksEquationsParser.VARIABLE)
+                pass
+
+            elif la_ == 4:
+                self.state = 17
                 self.match(SolidWorksEquationsParser.NUMBER)
                 pass
-            elif token in [13]:
-                self.state = 34
-                self.match(SolidWorksEquationsParser.STRING)
-                pass
-            elif token in [4]:
-                self.state = 35
-                self.match(SolidWorksEquationsParser.T__3)
-                self.state = 36
-                self.expression(0)
-                self.state = 37
-                self.match(SolidWorksEquationsParser.T__4)
-                pass
-            else:
-                raise NoViableAltException(self)
+
 
             self._ctx.stop = self._input.LT(-1)
-            self.state = 46
+            self.state = 28
             self._errHandler.sync(self)
-            _alt = self._interp.adaptivePredict(self._input,3,self._ctx)
+            _alt = self._interp.adaptivePredict(self._input,2,self._ctx)
             while _alt!=2 and _alt!=ATN.INVALID_ALT_NUMBER:
                 if _alt==1:
                     if self._parseListeners is not None:
                         self.triggerExitRuleEvent()
                     _prevctx = localctx
-                    localctx = SolidWorksEquationsParser.ExpressionContext(self, _parentctx, _parentState)
-                    self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
-                    self.state = 41
-                    if not self.precpred(self._ctx, 1):
-                        from antlr4.error.Errors import FailedPredicateException
-                        raise FailedPredicateException(self, "self.precpred(self._ctx, 1)")
-                    self.state = 42
-                    localctx.op = self._input.LT(1)
-                    _la = self._input.LA(1)
-                    if not((((_la) & ~0x3f) == 0 and ((1 << _la) & 960) != 0)):
-                        localctx.op = self._errHandler.recoverInline(self)
-                    else:
-                        self._errHandler.reportMatch(self)
-                        self.consume()
-                    self.state = 43
-                    self.expression(2) 
-                self.state = 48
+                    self.state = 26
+                    self._errHandler.sync(self)
+                    la_ = self._interp.adaptivePredict(self._input,1,self._ctx)
+                    if la_ == 1:
+                        localctx = SolidWorksEquationsParser.ExpressionContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
+                        self.state = 20
+                        if not self.precpred(self._ctx, 6):
+                            from antlr4.error.Errors import FailedPredicateException
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 6)")
+                        self.state = 21
+                        localctx.op = self._input.LT(1)
+                        _la = self._input.LA(1)
+                        if not(_la==4 or _la==5):
+                            localctx.op = self._errHandler.recoverInline(self)
+                        else:
+                            self._errHandler.reportMatch(self)
+                            self.consume()
+                        self.state = 22
+                        self.expression(7)
+                        pass
+
+                    elif la_ == 2:
+                        localctx = SolidWorksEquationsParser.ExpressionContext(self, _parentctx, _parentState)
+                        self.pushNewRecursionContext(localctx, _startState, self.RULE_expression)
+                        self.state = 23
+                        if not self.precpred(self._ctx, 5):
+                            from antlr4.error.Errors import FailedPredicateException
+                            raise FailedPredicateException(self, "self.precpred(self._ctx, 5)")
+                        self.state = 24
+                        localctx.op = self._input.LT(1)
+                        _la = self._input.LA(1)
+                        if not(_la==6 or _la==7):
+                            localctx.op = self._errHandler.recoverInline(self)
+                        else:
+                            self._errHandler.reportMatch(self)
+                            self.consume()
+                        self.state = 25
+                        self.expression(6)
+                        pass
+
+             
+                self.state = 30
                 self._errHandler.sync(self)
-                _alt = self._interp.adaptivePredict(self._input,3,self._ctx)
+                _alt = self._interp.adaptivePredict(self._input,2,self._ctx)
 
         except RecognitionException as re:
             localctx.exception = re
@@ -415,11 +272,57 @@ class SolidWorksEquationsParser ( Parser ):
         return localctx
 
 
+    class MeasurementContext(ParserRuleContext):
+        __slots__ = 'parser'
+
+        def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
+            super().__init__(parent, invokingState)
+            self.parser = parser
+
+        def NUMBER(self):
+            return self.getToken(SolidWorksEquationsParser.NUMBER, 0)
+
+        def UNIT(self):
+            return self.getToken(SolidWorksEquationsParser.UNIT, 0)
+
+        def getRuleIndex(self):
+            return SolidWorksEquationsParser.RULE_measurement
+
+        def enterRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "enterMeasurement" ):
+                listener.enterMeasurement(self)
+
+        def exitRule(self, listener:ParseTreeListener):
+            if hasattr( listener, "exitMeasurement" ):
+                listener.exitMeasurement(self)
+
+
+
+
+    def measurement(self):
+
+        localctx = SolidWorksEquationsParser.MeasurementContext(self, self._ctx, self.state)
+        self.enterRule(localctx, 4, self.RULE_measurement)
+        try:
+            self.enterOuterAlt(localctx, 1)
+            self.state = 31
+            self.match(SolidWorksEquationsParser.NUMBER)
+            self.state = 32
+            self.match(SolidWorksEquationsParser.UNIT)
+        except RecognitionException as re:
+            localctx.exception = re
+            self._errHandler.reportError(self, re)
+            self._errHandler.recover(self, re)
+        finally:
+            self.exitRule()
+        return localctx
+
+
 
     def sempred(self, localctx:RuleContext, ruleIndex:int, predIndex:int):
         if self._predicates == None:
             self._predicates = dict()
-        self._predicates[4] = self.expression_sempred
+        self._predicates[1] = self.expression_sempred
         pred = self._predicates.get(ruleIndex, None)
         if pred is None:
             raise Exception("No predicate with index:" + str(ruleIndex))
@@ -428,7 +331,11 @@ class SolidWorksEquationsParser ( Parser ):
 
     def expression_sempred(self, localctx:ExpressionContext, predIndex:int):
             if predIndex == 0:
-                return self.precpred(self._ctx, 1)
+                return self.precpred(self._ctx, 6)
+         
+
+            if predIndex == 1:
+                return self.precpred(self._ctx, 5)
          
 
 

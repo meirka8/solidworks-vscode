@@ -8,39 +8,12 @@ else:
 # This class defines a complete listener for a parse tree produced by SolidWorksEquationsParser.
 class SolidWorksEquationsListener(ParseTreeListener):
 
-    # Enter a parse tree produced by SolidWorksEquationsParser#equations.
-    def enterEquations(self, ctx:SolidWorksEquationsParser.EquationsContext):
+    # Enter a parse tree produced by SolidWorksEquationsParser#variableDefinition.
+    def enterVariableDefinition(self, ctx:SolidWorksEquationsParser.VariableDefinitionContext):
         pass
 
-    # Exit a parse tree produced by SolidWorksEquationsParser#equations.
-    def exitEquations(self, ctx:SolidWorksEquationsParser.EquationsContext):
-        pass
-
-
-    # Enter a parse tree produced by SolidWorksEquationsParser#equation.
-    def enterEquation(self, ctx:SolidWorksEquationsParser.EquationContext):
-        pass
-
-    # Exit a parse tree produced by SolidWorksEquationsParser#equation.
-    def exitEquation(self, ctx:SolidWorksEquationsParser.EquationContext):
-        pass
-
-
-    # Enter a parse tree produced by SolidWorksEquationsParser#variableDeclaration.
-    def enterVariableDeclaration(self, ctx:SolidWorksEquationsParser.VariableDeclarationContext):
-        pass
-
-    # Exit a parse tree produced by SolidWorksEquationsParser#variableDeclaration.
-    def exitVariableDeclaration(self, ctx:SolidWorksEquationsParser.VariableDeclarationContext):
-        pass
-
-
-    # Enter a parse tree produced by SolidWorksEquationsParser#propertyAssignment.
-    def enterPropertyAssignment(self, ctx:SolidWorksEquationsParser.PropertyAssignmentContext):
-        pass
-
-    # Exit a parse tree produced by SolidWorksEquationsParser#propertyAssignment.
-    def exitPropertyAssignment(self, ctx:SolidWorksEquationsParser.PropertyAssignmentContext):
+    # Exit a parse tree produced by SolidWorksEquationsParser#variableDefinition.
+    def exitVariableDefinition(self, ctx:SolidWorksEquationsParser.VariableDefinitionContext):
         pass
 
 
@@ -50,6 +23,15 @@ class SolidWorksEquationsListener(ParseTreeListener):
 
     # Exit a parse tree produced by SolidWorksEquationsParser#expression.
     def exitExpression(self, ctx:SolidWorksEquationsParser.ExpressionContext):
+        pass
+
+
+    # Enter a parse tree produced by SolidWorksEquationsParser#measurement.
+    def enterMeasurement(self, ctx:SolidWorksEquationsParser.MeasurementContext):
+        pass
+
+    # Exit a parse tree produced by SolidWorksEquationsParser#measurement.
+    def exitMeasurement(self, ctx:SolidWorksEquationsParser.MeasurementContext):
         pass
 
 

@@ -1,22 +1,42 @@
 grammar SolidWorksEquations;
 
-equations: equation+;
+variableDefinition: VARIABLE EQUALS expression;
 
-equation: variableDeclaration | propertyAssignment;
+EQUALS: '=';
 
-variableDeclaration: STRING '=' expression ';';
+expression:
+	expression op = (MULTIPLY | DIVIDE) expression
+	| expression op = (ADD | SUBTRACT) expression
+	| '(' expression ')'
+	| measurement
+	| VARIABLE
+	| NUMBER;
 
-propertyAssignment: STRING '@' STRING '=' expression ';';
+MULTIPLY: '*';
+DIVIDE: '/';
+ADD: '+';
+SUBTRACT: '-';
 
-expression: ID
-          | NUMBER
-          | STRING
-          | '(' expression ')'
-          | expression op=('*' | '/' | '+' | '-') expression
-          ;
+measurement: NUMBER UNIT;
 
-ID: [a-zA-Z_][a-zA-Z0-9_]*;
-NUMBER: [0-9]+ ('.' [0-9]+)? (UNIT)?;
-UNIT: ('mm' | 'cm' | 'm' | 'in' | 'ft');
-STRING: '"' (~["\\] | '\\' .)* '"';
+NUMBER: [0-9]+ ('.' [0-9]+)?;
+
+UNIT: (
+		'mm'
+		| 'cm'
+		| 'm'
+		| 'in'
+		| 'ft'
+		| 'yd'
+		| 'km'
+		| 'mi'
+		| 'yd'
+		| 'nm'
+		| 'um'
+		| 'nm'
+		| 'pm'
+		| 'fm'
+		| 'am'
+	);
+VARIABLE: '"' [a-zA-Z_][a-zA-Z_0-9]* '"';
 WS: [ \t\r\n]+ -> skip;
