@@ -1,5 +1,7 @@
 grammar SolidWorksEquations;
 
+equations: variableDefinition* EOF;
+
 variableDefinition: VARIABLE EQUALS expression;
 
 EQUALS: '=';

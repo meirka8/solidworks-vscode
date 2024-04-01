@@ -8,6 +8,15 @@ else:
 # This class defines a complete listener for a parse tree produced by SolidWorksEquationsParser.
 class SolidWorksEquationsListener(ParseTreeListener):
 
+    # Enter a parse tree produced by SolidWorksEquationsParser#equations.
+    def enterEquations(self, ctx:SolidWorksEquationsParser.EquationsContext):
+        pass
+
+    # Exit a parse tree produced by SolidWorksEquationsParser#equations.
+    def exitEquations(self, ctx:SolidWorksEquationsParser.EquationsContext):
+        pass
+
+
     # Enter a parse tree produced by SolidWorksEquationsParser#variableDefinition.
     def enterVariableDefinition(self, ctx:SolidWorksEquationsParser.VariableDefinitionContext):
         pass
