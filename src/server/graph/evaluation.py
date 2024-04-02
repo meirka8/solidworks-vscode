@@ -20,7 +20,7 @@ def evaluate_expressions(G):
         expression = G.nodes[node]["expression"]
         dependencies = list(G.predecessors(node))
         for dep in dependencies:
-            expression = expression.replace(dep, G.nodes[dep]["expression"])
+            expression = expression.replace(dep, str(G.nodes[dep]["evaluation"]))
         evaluation = try_evaluating_expression(expression, ureg)
         G.nodes[node]["evaluation"] = evaluation
     return G
