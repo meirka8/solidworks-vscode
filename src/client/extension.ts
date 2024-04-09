@@ -38,6 +38,9 @@ export function activate(context: vscode.ExtensionContext): void {
       return Promise.resolve(result);
     };
   } else {
+    cp.exec("pip install -r src/server/requirements.txt", {
+      cwd: context.extensionPath,
+    });
     // The server is implemented in Python
     let serverCommand = "python";
     let serverArgs = [
