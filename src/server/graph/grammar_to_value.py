@@ -1,9 +1,9 @@
 from antlr4 import CommonTokenStream, InputStream, ParseTreeWalker
-from server.grammar.SolidWorksEquationsLexer import SolidWorksEquationsLexer
-from server.grammar.SolidWorksEquationsParser import SolidWorksEquationsParser
-from server.grammar.SolidWorksEquationsListener import SolidWorksEquationsListener
-from server.graph.dependency import VariableDependencyListener
-from server.graph.evaluation import evaluate_expressions
+from grammar.SolidWorksEquationsLexer import SolidWorksEquationsLexer
+from grammar.SolidWorksEquationsParser import SolidWorksEquationsParser
+from grammar.SolidWorksEquationsListener import SolidWorksEquationsListener
+from graph.dependency import VariableDependencyListener
+from graph.evaluation import evaluate_expressions
 
 
 def parse_grammar_tree(data: str):

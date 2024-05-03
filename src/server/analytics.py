@@ -1,5 +1,5 @@
 import networkx as nx
-from server.graph.grammar_to_value import dependency_to_value, grammar_to_dependency
+from graph.grammar_to_value import dependency_to_value, grammar_to_dependency
 from enum import Enum
 
 

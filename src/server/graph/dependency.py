@@ -1,6 +1,6 @@
 import networkx as nx
-from server.grammar.SolidWorksEquationsListener import SolidWorksEquationsListener
-from server.grammar.SolidWorksEquationsParser import SolidWorksEquationsParser
+from grammar.SolidWorksEquationsListener import SolidWorksEquationsListener
+from grammar.SolidWorksEquationsParser import SolidWorksEquationsParser
 
 
 class VariableDependencyListener(SolidWorksEquationsListener):
