@@ -1,3 +1,4 @@
+import * as cp from "child_process";
 import * as vscode from "vscode";
 import * as net from "net";
 import {
@@ -38,7 +39,7 @@ export function activate(context: vscode.ExtensionContext): void {
       return Promise.resolve(result);
     };
   } else {
-    cp.exec("pip install -r src/server/requirements.txt", {
+    cp.execSync("pip install -r src/server/requirements.txt", {
       cwd: context.extensionPath,
     });
     // The server is implemented in Python
