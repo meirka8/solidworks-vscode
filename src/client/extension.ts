@@ -43,7 +43,7 @@ export function activate(context: vscode.ExtensionContext): void {
       cwd: context.extensionPath,
     });
     // The server is implemented in Python
-    let serverCommand = "python";
+    let serverCommand = "cd src && python";
     let serverArgs = [
       context.asAbsolutePath("src/server/server.py"),
       "--stdio",

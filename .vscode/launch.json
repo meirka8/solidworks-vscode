@@ -21,6 +21,7 @@
             "name": "Launch Server",
             "type": "debugpy",
             "request": "launch",
+			"cwd": "${workspaceFolder}/src",
             "program": "${workspaceFolder}/src/server/server.py",
             "console": "integratedTerminal",
 			"python": "${command:python.interpreterPath}",
