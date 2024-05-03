@@ -12,6 +12,9 @@ from lsprotocol.types import (
 from pygls.protocol import LanguageServerProtocol, lsp_method
 import pickle
 
+from server.analytics import audit_document
+from server.utils import ensure_serializable
+
 
 class SWLanguageServer(LanguageServer):
 
@@ -29,15 +32,21 @@ ls = SWLanguageServer(name="pygls-sample", version="0.1.0")
 
 @ls.feature(TEXT_DOCUMENT_DID_OPEN)
 def did_open(ls, params):
+    ls.show_message_log("Document did open.")
     # Pickle the params object
     pickle.dump(params, open("./common_data/lsp/params_open.pkl", "wb"))
-    ls.show_message_log("Document did open.")
+    # Audit the document
+    audit_report = audit_document(params)
+    audit_report = ensure_serializable(audit_report)
 
 
 @ls.feature(TEXT_DOCUMENT_DID_CHANGE)
 def did_change(ls, params):
-    pickle.dump(params, open("./common_data/lsp/params_change.pkl", "wb"))
     ls.show_message_log("Document did change.")
+    pickle.dump(params, open("./common_data/lsp/params_change.pkl", "wb"))
+    # Audit the document
+    audit_report = audit_document(params)
+    audit_report = ensure_serializable(audit_report)
 
 
 def start_server():
@@ -47,4 +56,5 @@ def start_server():
         ls.start_io()
 
 
-start_server()
+if __name__ == "__main__":
+    start_server()
