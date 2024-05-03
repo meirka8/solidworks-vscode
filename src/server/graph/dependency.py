@@ -13,8 +13,15 @@ class VariableDependencyListener(SolidWorksEquationsListener):
     ):
         variable = ctx.VARIABLE().getText()
         self.dependency_list = []
+        location = {
+            "start": {"line": ctx.start.line, "column": ctx.start.column},
+            "end": {"line": ctx.stop.line, "column": ctx.stop.column},
+        }
         self.G.add_node(
-            variable, type="variable", expression=ctx.expression().getText()
+            variable,
+            type="variable",
+            expression=ctx.expression().getText(),
+            location=location,
         )
 
     def enterExpression(self, ctx: SolidWorksEquationsParser.ExpressionContext):
