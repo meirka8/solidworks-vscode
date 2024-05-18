@@ -70,6 +70,12 @@ export function activate(context: vscode.ExtensionContext): void {
     clientOptions
   );
 
+  client.onNotification("$/variableEvaluations", (params) => {
+    const uri = params.uri;
+    const variableEvaluations = params.variableEvaluations;
+    // Use the URI and variable evaluations as needed
+  });
+
   client.start();
 
   // Initialize diagnostics
