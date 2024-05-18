@@ -1,7 +1,7 @@
 import networkx as nx
 from graph.grammar_to_value import dependency_to_value, grammar_to_dependency
 from enum import Enum
-from pygls.lsp.types import Diagnostic, DiagnosticSeverity, Position, Range
+from lsprotocol.types import Diagnostic, DiagnosticSeverity, Position, Range
 
 
 class ErrorCode(Enum):
