@@ -45,6 +45,7 @@ def did_open(ls, params):
     audit_report = audit_document(params)
     audit_report = ensure_serializable(audit_report)
 
+    ls.publish_diagnostics(params.text_document.uri, audit_report["diagnostics_list"])
     ls.send_variable_evaluations(params.text_document.uri, audit_report["node_values"])
 
 

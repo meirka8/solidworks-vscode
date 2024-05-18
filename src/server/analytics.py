@@ -1,6 +1,7 @@
 import networkx as nx
 from graph.grammar_to_value import dependency_to_value, grammar_to_dependency
 from enum import Enum
+from pygls.lsp.types import Diagnostic, DiagnosticSeverity, Position, Range
 
 
 class ErrorCode(Enum):
@@ -16,12 +17,29 @@ def evaluate_document(G: nx.DiGraph):
             node for node in G.nodes if "expression" not in G.nodes[node]
         ]
         if nodes_without_expression:
-            issues_list.append(
-                {
-                    "error": ErrorCode.UNDEFINED_VARIABLES.value,
-                    "variables": nodes_without_expression,
-                }
-            )
+            for node in nodes_without_expression:
+                for usage in G.out_edges(node):
+                    usage_location = usage["location"]
+                    issues_list.append(
+                        {
+                            "error": ErrorCode.UNDEFINED_VARIABLES.value,
+                            "diagnostic": Diagnostic(
+                                range=Range(
+                                    start=Position(
+                                        line=usage_location["start"]["line"] - 1,
+                                        character=usage_location["start"]["column"] - 1,
+                                    ),
+                                    end=Position(
+                                        line=usage_location["end"]["line"] - 1,
+                                        character=usage_location["end"]["column"] - 1,
+                                    ),
+                                ),
+                                message=f"Variable {node} has not been defined.",
+                                severity=DiagnosticSeverity.Error,
+                            ),
+                        }
+                    )
+        if issues_list:
             return G, issues_list
         G_evaluated = dependency_to_value(G)
     except Exception as e:
@@ -39,8 +57,12 @@ def audit_document(params):
     data = params.text_document.text
     G = grammar_to_dependency(data)
     G, issues_list = evaluate_document(G)
+    diagnostics_list = [
+        issue["diagnostic"] for issue in issues_list if "diagnostic" in issue
+    ]
     node_values = get_document_evaluation(G)
     return {
         "node_values": node_values,
         "issues_list": issues_list,
+        "diagnostics_list": diagnostics_list,
     }
