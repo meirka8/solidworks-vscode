@@ -80,63 +80,6 @@ export function activate(context: vscode.ExtensionContext): void {
 
   client.start();
 
-  // Initialize diagnostics
-  const diagnosticCollection = vscode.languages.createDiagnosticCollection(
-    "solidworks-equations"
-  );
-  const diagnostics: vscode.Diagnostic[] = [];
-
-  // get variables on startup
-  const editor = vscode.window.activeTextEditor;
-  const document = editor?.document;
-
-  let definedVariableDefinitions: VariableDefinition[] = [];
-  if (document) {
-    definedVariableDefinitions = diagnoseVariables(document, diagnostics);
-    diagnosticCollection.set(document.uri, diagnostics);
-  }
-  const variableDefinitionProvider = new VariableDefinitionProvider(
-    definedVariableDefinitions
-  );
-  vscode.window.registerTreeDataProvider(
-    "variableDefinitions",
-    variableDefinitionProvider
-  );
-
-  context.subscriptions.push(
-    vscode.workspace.onDidChangeTextDocument(function (event): void {
-      try {
-        const diagnostics: vscode.Diagnostic[] = [];
-        const document = event.document;
-
-        const definedVariableDefinitions = diagnoseVariables(
-          document,
-          diagnostics
-        );
-        variableDefinitionProvider.update(definedVariableDefinitions);
-
-        // Set the diagnostics
-        diagnosticCollection.set(document.uri, diagnostics);
-      } catch (e) {
-        console.error("Error handling onDidChangeTextDocument event:", e);
-      }
-    })
-  );
-
-  const disposableVariableDefinition = vscode.commands.registerCommand(
-    "extension.jumpToVariableDefinition",
-    (variableDefinition: VariableDefinition) => {
-      const editor = vscode.window.activeTextEditor;
-      if (editor) {
-        let range = editor.document.lineAt(variableDefinition.line).range;
-        editor.selection = new vscode.Selection(range.start, range.end);
-        editor.revealRange(range);
-      }
-    }
-  );
-
-  context.subscriptions.push(disposableVariableDefinition);
-
   const provider = new SolidworksEquationsDefinitionProvider();
   const selector = { scheme: "file", language: "solidworks-equations" };
   const disposableEquationsDefinition =
