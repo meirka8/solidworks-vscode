@@ -1,13 +1,7 @@
 import * as cp from "child_process";
 import * as vscode from "vscode";
 import * as net from "net";
-import {
-  SolidworksEquationsDefinitionProvider,
-  getVariables,
-  varRegex,
-  varUsageRegex,
-  VariableLocation,
-} from "./definition_provider";
+import { SolidworksEquationsDefinitionProvider } from "./definition_provider";
 import {
   LanguageClient,
   LanguageClientOptions,
@@ -15,10 +9,6 @@ import {
   StreamInfo,
   TransportKind,
 } from "vscode-languageclient/node";
-import {
-  VariableDefinitionProvider,
-  VariableDefinition,
-} from "./variable_definition_provider";
 import { Equations } from "./variable";
 let client: LanguageClient;
 let equations: Equations;
@@ -72,7 +62,6 @@ export function activate(context: vscode.ExtensionContext): void {
   );
 
   client.onNotification("$/variableEvaluations", (params) => {
-    const uri = params.uri;
     const variableEvaluations = params.variableEvaluations;
     // Use the URI and variable evaluations as needed
     equations = Equations.fromJson(variableEvaluations);
@@ -85,49 +74,6 @@ export function activate(context: vscode.ExtensionContext): void {
   const disposableEquationsDefinition =
     vscode.languages.registerDefinitionProvider(selector, provider);
   context.subscriptions.push(disposableEquationsDefinition);
-}
-
-function diagnoseVariables(
-  document: vscode.TextDocument,
-  diagnostics: vscode.Diagnostic[]
-) {
-  const definedVariableLocations = getVariables(document, varRegex);
-  const usedVariableLocations = getVariables(document, varUsageRegex);
-  const definedVariableNames = definedVariableLocations.map((v) => v.name);
-
-  diagnoseUndefinedVariables(
-    usedVariableLocations,
-    definedVariableNames,
-    diagnostics
-  );
-
-  const definedVariableDefinitions = definedVariableLocations.map(
-    VariableDefinition.fromVariableLocation
-  );
-  return definedVariableDefinitions.sort((a, b) =>
-    a.name.localeCompare(b.name)
-  );
-}
-
-function diagnoseUndefinedVariables(
-  usedVariableLocations: VariableLocation[],
-  definedVariableNames: string[],
-  diagnostics: vscode.Diagnostic[]
-) {
-  for (const usedVar of usedVariableLocations) {
-    if (!definedVariableNames.includes(usedVar.name)) {
-      const diagnostic: vscode.Diagnostic = {
-        severity: vscode.DiagnosticSeverity.Error,
-        range: new vscode.Range(
-          new vscode.Position(usedVar.line, usedVar.start),
-          new vscode.Position(usedVar.line, usedVar.end)
-        ),
-        message: `Undefined variable ${usedVar.name}`,
-        source: "solidworks-equations",
-      };
-      diagnostics.push(diagnostic);
-    }
-  }
 }
 
 export function deactivate(): Thenable<void> | undefined {
