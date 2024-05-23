@@ -19,8 +19,9 @@ import {
   VariableDefinitionProvider,
   VariableDefinition,
 } from "./variable_definition_provider";
-
+import { Equations } from "./variable";
 let client: LanguageClient;
+let equations: Equations;
 
 export function activate(context: vscode.ExtensionContext): void {
   let serverOptions: ServerOptions;
@@ -74,6 +75,7 @@ export function activate(context: vscode.ExtensionContext): void {
     const uri = params.uri;
     const variableEvaluations = params.variableEvaluations;
     // Use the URI and variable evaluations as needed
+    equations = Equations.fromJson(variableEvaluations);
   });
 
   client.start();
