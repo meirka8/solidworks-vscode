@@ -1,7 +1,5 @@
-import { log } from "console";
-
 // Define the structure of your variable object
-interface Variable {
+export interface Variable {
   name: string;
   evaluation: string;
   expression: string;
