@@ -10,10 +10,44 @@ import {
   TransportKind,
 } from "vscode-languageclient/node";
 import { Equations } from "./variable";
+import { VariableTreeDataProvider } from "./variable_definition_provider";
+
 let client: LanguageClient;
-let equations: Equations;
 
 export function activate(context: vscode.ExtensionContext): void {
+  let equations = new Equations();
+  const variableTreeDataProvider = new VariableTreeDataProvider(equations);
+  vscode.window.registerTreeDataProvider(
+    "variableDefinitions",
+    variableTreeDataProvider
+  );
+  vscode.window.createTreeView("variableTree", {
+    treeDataProvider: variableTreeDataProvider,
+  });
+  const disposableVariableDefinition = vscode.commands.registerCommand(
+    "extension.jumpToVariableDefinition",
+    (variable) => {
+      const editor = vscode.window.activeTextEditor;
+      if (editor) {
+        if (editor) {
+          let range = new vscode.Range(
+            new vscode.Position(
+              variable.location.start.line,
+              variable.location.start.column
+            ),
+            new vscode.Position(
+              variable.location.end.line,
+              variable.location.end.column
+            )
+          );
+          editor.selection = new vscode.Selection(range.start, range.end);
+          editor.revealRange(range);
+        }
+      }
+    }
+  );
+  context.subscriptions.push(disposableVariableDefinition);
+
   let serverOptions: ServerOptions;
 
   if (process.env.ENV === "development") {
@@ -65,6 +99,7 @@ export function activate(context: vscode.ExtensionContext): void {
     const variableEvaluations = params.variableEvaluations;
     // Use the URI and variable evaluations as needed
     equations = Equations.fromJson(variableEvaluations);
+    variableTreeDataProvider.updateEquations(equations);
   });
 
   client.start();
