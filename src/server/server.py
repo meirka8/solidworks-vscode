@@ -39,10 +39,9 @@ ls = SWLanguageServer(name="pygls-sample", version="0.1.0")
 @ls.feature(TEXT_DOCUMENT_DID_OPEN)
 def did_open(ls, params):
     ls.show_message_log("Document did open.")
-    # Pickle the params object
-    # pickle.dump(params, open("./common_data/lsp/params_open.pkl", "wb"))
     # Audit the document
-    audit_report = audit_document(params)
+    text_document = params.text_document.text
+    audit_report = audit_document(text_document)
     audit_report = ensure_serializable(audit_report)
 
     ls.publish_diagnostics(params.text_document.uri, audit_report["diagnostics_list"])
@@ -52,9 +51,9 @@ def did_open(ls, params):
 @ls.feature(TEXT_DOCUMENT_DID_CHANGE)
 def did_change(ls, params):
     ls.show_message_log("Document did change.")
-    # pickle.dump(params, open("./common_data/lsp/params_change.pkl", "wb"))
     # Audit the document
-    audit_report = audit_document(params)
+    text_document = ls.workspace.get_document(params.text_document.uri).source
+    audit_report = audit_document(text_document)
     audit_report = ensure_serializable(audit_report)
 
     ls.send_variable_evaluations(params.text_document.uri, audit_report["node_values"])

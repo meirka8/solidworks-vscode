@@ -53,24 +53,15 @@ def get_document_evaluation(G: nx.DiGraph):
     return node_values
 
 
-def audit_document(params):
-    if hasattr(params.text_document, "text"):
-        data = params.text_document.text
-        G = grammar_to_dependency(data)
-        G, issues_list = evaluate_document(G)
-        diagnostics_list = [
-            issue["diagnostic"] for issue in issues_list if "diagnostic" in issue
-        ]
-        node_values = get_document_evaluation(G)
-        return {
-            "node_values": node_values,
-            "issues_list": issues_list,
-            "diagnostics_list": diagnostics_list,
-        }
-    else:
-        print("No text in the document.")
-        return {
-            "node_values": {},
-            "issues_list": [],
-            "diagnostics_list": [],
-        }
+def audit_document(text_document: str):
+    G = grammar_to_dependency(text_document)
+    G, issues_list = evaluate_document(G)
+    diagnostics_list = [
+        issue["diagnostic"] for issue in issues_list if "diagnostic" in issue
+    ]
+    node_values = get_document_evaluation(G)
+    return {
+        "node_values": node_values,
+        "issues_list": issues_list,
+        "diagnostics_list": diagnostics_list,
+    }
