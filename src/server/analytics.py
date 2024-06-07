@@ -18,8 +18,8 @@ def evaluate_document(G: nx.DiGraph):
         ]
         if nodes_without_expression:
             for node in nodes_without_expression:
-                for usage in G.out_edges(node):
-                    usage_location = usage["location"]
+                for _, dependant in G.out_edges(node):
+                    usage_location = G[node][dependant]["location"]
                     issues_list.append(
                         {
                             "error": ErrorCode.UNDEFINED_VARIABLES.value,
