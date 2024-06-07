@@ -100,12 +100,6 @@ class SolidWorksEquationsParser ( Parser ):
             if hasattr( listener, "exitEquations" ):
                 listener.exitEquations(self)
 
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitEquations" ):
-                return visitor.visitEquations(self)
-            else:
-                return visitor.visitChildren(self)
-
 
 
 
@@ -164,12 +158,6 @@ class SolidWorksEquationsParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitVariableDefinition" ):
                 listener.exitVariableDefinition(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitVariableDefinition" ):
-                return visitor.visitVariableDefinition(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -242,12 +230,6 @@ class SolidWorksEquationsParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitExpression" ):
                 listener.exitExpression(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitExpression" ):
-                return visitor.visitExpression(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 
@@ -376,12 +358,6 @@ class SolidWorksEquationsParser ( Parser ):
         def exitRule(self, listener:ParseTreeListener):
             if hasattr( listener, "exitMeasurement" ):
                 listener.exitMeasurement(self)
-
-        def accept(self, visitor:ParseTreeVisitor):
-            if hasattr( visitor, "visitMeasurement" ):
-                return visitor.visitMeasurement(self)
-            else:
-                return visitor.visitChildren(self)
 
 
 

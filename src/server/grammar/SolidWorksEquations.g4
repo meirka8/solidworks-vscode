@@ -32,13 +32,13 @@ UNIT: (
 		| 'yd'
 		| 'km'
 		| 'mi'
-		| 'yd'
 		| 'nm'
 		| 'um'
-		| 'nm'
 		| 'pm'
 		| 'fm'
 		| 'am'
 	);
-VARIABLE: '"' [a-zA-Z_@-][a-zA-Z_0-9@-]* '"';
-WS: [ \t\r\n]+ -> skip;
+
+VARIABLE: '"' ~["]* '"';
+
+WS: [ \t\n\r]+ -> skip;

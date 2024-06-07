@@ -1,23 +1,46 @@
-﻿"D3@Wave profile" = "D2@Wave profile" - 2 * "D1@Wave profile"
-"D8@Wave profile" = "D5@Wave profile" - 2 * "D7@Wave profile"
-"D10@Wave profile" = "D6@Wave profile" - "D9@Wave profile"
-"Lock width"= 1mm
-"Lock buffer"= 2mm
-"Lock rest"= 2mm
-"Lock length"= 14mm
-"D2@Wave profile" = "Lock length"
-"D4@Wave profile" = "Lock buffer"
-"D5@Wave profile" = "Lock width"
-"D6@Wave profile" = "Lock rest"
-"Allowance"= 0.1mm
-"D7@Wave profile" = "Allowance" / 2
-"D9@Wave profile" = "Allowance"
-"D1@Wave profile" = "Allowance" / 2
-"Lock height"= 0.2mm
-"Joint height"= 3mm
-"Lock out horizontal buffer@Wave profile"="Lock horizontal buffer@Wave profile"
-"D1@Joint out" = "Joint height" - "Allowance" * 2
-"D1@Joint in" = "Joint height"
-"D1@Lock out" = "Joint height" + "Lock height" * 2 - "Allowance" * 2
-"D1@Lock in" = "Joint height" + "Lock height"
-"Lock allowance"= 0.05mm
+﻿"D3@Wave profile" = "D2@Wave profile" - 2 * "D1@Wave profile"
+
+"D8@Wave profile" = "D5@Wave profile" - 2 * "D7@Wave profile"
+
+"D10@Wave profile" = "D6@Wave profile" - "D9@Wave profile"
+
+"Lock width"= 1mm
+
+"Lock buffer"= 2mm
+
+"Lock rest"= 2mm
+
+"Lock length"= 14mm
+
+"D2@Wave profile" = "Lock length"
+
+"D4@Wave profile" = "Lock buffer"
+
+"D5@Wave profile" = "Lock width"
+
+"D6@Wave profile" = "Lock rest"
+
+"Allowance"= 0.1mm
+
+"D7@Wave profile" = "Allowance" / 2
+
+"D9@Wave profile" = "Allowance"
+
+"D1@Wave profile" = "Allowance" / 2
+
+"Lock height"= 0.2mm
+
+"Joint height"= 3mm
+
+"Lock out horizontal buffer@Wave profile"="Lock horizontal buffer@Wave profile"
+
+"D1@Joint out" = "Joint height" - "Allowance" * 2
+
+"D1@Joint in" = "Joint height"
+
+"D1@Lock out" = "Joint height" + "Lock height" * 2 - "Allowance" * 2
+
+"D1@Lock in" = "Joint height" + "Lock height"
+
+"Lock allowance"= 0.05mm
+
