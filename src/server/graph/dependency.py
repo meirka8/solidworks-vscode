@@ -11,33 +11,49 @@ class VariableDependencyListener(SolidWorksEquationsListener):
     def enterVariableDefinition(
         self, ctx: SolidWorksEquationsParser.VariableDefinitionContext
     ):
-        variable = ctx.VARIABLE().getText()
         self.dependency_list = []
-        location = {
-            "start": {"line": ctx.start.line, "column": ctx.start.column},
-            "end": {"line": ctx.stop.line, "column": ctx.stop.column},
-        }
+        location = self.getImmediateChildVariableLocation(ctx)
         self.G.add_node(
-            variable,
+            self.getImmediateChildVariableName(ctx),
             type="variable",
             expression=ctx.expression().getText(),
             location=location,
         )
 
+    def getImmediateChildVariableName(
+        self, ctx: SolidWorksEquationsParser.ExpressionContext
+    ):
+        return ctx.VARIABLE().getText()
+
+    def getImmediateChildVariableLocation(
+        self, ctx: SolidWorksEquationsParser.VariableDefinitionContext
+    ):
+        location = {
+            "start": {"line": ctx.start.line, "column": ctx.start.column + 1},
+            "end": {
+                "line": ctx.start.line,
+                "column": ctx.stop.column
+                + len(self.getImmediateChildVariableName(ctx)),
+            },
+        }
+
+        return location
+
     def enterExpression(self, ctx: SolidWorksEquationsParser.ExpressionContext):
         if ctx.VARIABLE():
-            variable = ctx.VARIABLE()
-            location = {
-                "start": {"line": ctx.start.line, "column": ctx.start.column},
-                "end": {"line": ctx.stop.line, "column": ctx.stop.column},
-            }
             self.dependency_list.append(
-                {"variable": variable.getText(), "location": location}
+                {
+                    "variable": self.getImmediateChildVariableName(ctx),
+                    "location": self.getImmediateChildVariableLocation(ctx),
+                }
             )
 
     def exitVariableDefinition(
         self, ctx: SolidWorksEquationsParser.VariableDefinitionContext
     ):
-        variable = ctx.VARIABLE().getText()
         for v in self.dependency_list:
-            self.G.add_edge(v["variable"], variable, location=v["location"])
+            self.G.add_edge(
+                v["variable"],
+                self.getImmediateChildVariableName(ctx),
+                location=v["location"],
+            )
