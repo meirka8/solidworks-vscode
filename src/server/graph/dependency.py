@@ -26,12 +26,14 @@ class VariableDependencyListener(SolidWorksEquationsListener):
 
     def enterExpression(self, ctx: SolidWorksEquationsParser.ExpressionContext):
         if ctx.VARIABLE():
-            variable = ctx.VARIABLE().getText()
+            variable = ctx.VARIABLE()
             location = {
                 "start": {"line": ctx.start.line, "column": ctx.start.column},
                 "end": {"line": ctx.stop.line, "column": ctx.stop.column},
             }
-            self.dependency_list.append({"variable": variable, "location": location})
+            self.dependency_list.append(
+                {"variable": variable.getText(), "location": location}
+            )
 
     def exitVariableDefinition(
         self, ctx: SolidWorksEquationsParser.VariableDefinitionContext
