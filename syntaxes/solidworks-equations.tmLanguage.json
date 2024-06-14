@@ -5,7 +5,7 @@
     "patterns": [
       {
         "name": "specific-measurement.solidworks-equations",
-        "match": "\"[^\"]*@[^\\s\"]+\""
+        "match": "\"[^\"]*@[^\"]+\""
       },
       {
         "name": "variable.solidworks-equations",
