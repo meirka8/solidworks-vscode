@@ -30,6 +30,18 @@
 			}
         },
 		{
+            "name": "UAT Extension",
+            "type": "extensionHost",
+            "request": "launch",
+            "runtimeExecutable": "${execPath}",
+            "args": ["--extensionDevelopmentPath=${workspaceFolder}"],
+            "outFiles": ["${workspaceFolder}/out/**/*.js"],
+            "preLaunchTask": "${defaultBuildTask}",
+			"env": {
+				
+			}
+        },
+		{
 			"name": "Extension Tests",
 			"type": "extensionHost",
 			"request": "launch",
