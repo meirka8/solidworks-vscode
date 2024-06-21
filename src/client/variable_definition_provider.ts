@@ -3,18 +3,33 @@ import { Equations, Variable } from "./variable";
 
 export class VariableTreeItem extends vscode.TreeItem {
   constructor(
-    public readonly variable: Variable, // Assuming Variable is the type of your variables
-    public readonly collapsibleState: vscode.TreeItemCollapsibleState
+    public readonly label: string,
+    public readonly collapsibleState: vscode.TreeItemCollapsibleState,
+    public readonly variable?: Variable // Assuming Variable is the type of your variables
   ) {
-    super(variable.name, collapsibleState);
-    this.description = variable.evaluation;
+    super(label, collapsibleState);
+    if (variable) {
+      this.tooltip = `${variable.name}: ${variable.evaluation}`;
+      this.description = variable?.evaluation;
+    } else {
+      this.tooltip = label;
+      this.description = "Sketch";
+    }
   }
 
-  command = {
-    command: "extension.jumpToVariableDefinition",
-    title: "Jump to Definition",
-    arguments: [this.variable],
-  };
+  getCommand(): vscode.Command | undefined {
+    if (this.collapsibleState === vscode.TreeItemCollapsibleState.None) {
+      return {
+        command: "extension.jumpToVariableDefinition",
+        title: "Jump to Definition",
+        arguments: [this.variable],
+      };
+    } else {
+      return undefined;
+    }
+  }
+
+  command = this.getCommand();
 }
 
 export class VariableTreeDataProvider
@@ -45,19 +60,46 @@ export class VariableTreeDataProvider
 
   getChildren(element?: VariableTreeItem): Thenable<VariableTreeItem[]> {
     if (element) {
-      return Promise.resolve([]);
+      const groupName = element.label;
+      const variables = this.equations.variables
+        .filter((v) => v.name.includes(`@${groupName}`))
+        .map(
+          (v) =>
+            new VariableTreeItem(
+              v.name,
+              vscode.TreeItemCollapsibleState.None,
+              v
+            )
+        )
+        .sort((a, b) => a.label.localeCompare(b.label));
+      return Promise.resolve(variables);
     } else {
-      return Promise.resolve(
-        this.equations.variables
-          .sort((a, b) => a.name.localeCompare(b.name))
-          .map(
-            (variable) =>
-              new VariableTreeItem(
-                variable,
-                vscode.TreeItemCollapsibleState.None
-              )
-          )
-      );
+      const variables = [];
+      const independentItems = this.equations.variables
+        .filter((v) => !v.name.includes("@"))
+        .map(
+          (v) =>
+            new VariableTreeItem(
+              v.name,
+              vscode.TreeItemCollapsibleState.None,
+              v
+            )
+        )
+        .sort((a, b) => a.label.localeCompare(b.label));
+      const variableGroupItems = this.equations.variables
+        .filter((v) => v.name.includes("@"))
+        .map((v) => v.name.split("@")[1])
+        .filter((value, index, self) => self.indexOf(value) === index)
+        .map(
+          (name) =>
+            new VariableTreeItem(
+              // name without closing quotation mark
+              name.slice(0, -1),
+              vscode.TreeItemCollapsibleState.Collapsed
+            )
+        )
+        .sort((a, b) => a.label.localeCompare(b.label));
+      return Promise.resolve([...independentItems, ...variableGroupItems]);
     }
   }
 }
