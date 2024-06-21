@@ -33,11 +33,11 @@ export function activate(context: vscode.ExtensionContext): void {
         if (editor) {
           let range = new vscode.Range(
             new vscode.Position(
-              variable.location.start.line,
+              variable.location.start.line - 1,
               variable.location.start.column
             ),
             new vscode.Position(
-              variable.location.end.line,
+              variable.location.end.line - 1,
               variable.location.end.column
             )
           );
