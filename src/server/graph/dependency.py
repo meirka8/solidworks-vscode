@@ -23,19 +23,22 @@ class VariableDependencyListener(SolidWorksEquationsListener):
     def getImmediateChildVariableName(
         self, ctx: SolidWorksEquationsParser.ExpressionContext
     ):
-        return ctx.VARIABLE().getText()
+        res = ctx.VARIABLE().getText()
+        return res
 
     def getImmediateChildVariableLocation(
         self, ctx: SolidWorksEquationsParser.VariableDefinitionContext
     ):
         location = {
-            "start": {"line": ctx.start.line, "column": ctx.start.column + 1},
+            "start": {"line": ctx.start.line, "column": ctx.start.column},
             "end": {
                 "line": ctx.start.line,
-                "column": ctx.stop.column
+                "column": ctx.start.column
                 + len(self.getImmediateChildVariableName(ctx)),
             },
         }
+
+        print(f"{self.getImmediateChildVariableName(ctx)} ({len(self.getImmediateChildVariableName(ctx))}): {location['start']['line']}:{location['start']['column']} - {location['end']['line']}:{location['end']['column']}")
 
         return location
 
