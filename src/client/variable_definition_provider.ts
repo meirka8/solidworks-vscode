@@ -48,10 +48,15 @@ export class VariableTreeDataProvider
       return Promise.resolve([]);
     } else {
       return Promise.resolve(
-        this.equations.variables.map(
-          (variable) =>
-            new VariableTreeItem(variable, vscode.TreeItemCollapsibleState.None)
-        )
+        this.equations.variables
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map(
+            (variable) =>
+              new VariableTreeItem(
+                variable,
+                vscode.TreeItemCollapsibleState.None
+              )
+          )
       );
     }
   }
