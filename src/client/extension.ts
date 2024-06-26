@@ -15,6 +15,7 @@ import {
   jumpToDefinition,
   VariableTreeDataProvider,
 } from "./variable_definition_provider";
+import { getClientOptions, getServerOptions } from "./server_utils";
 
 let client: LanguageClient;
 
@@ -34,90 +35,28 @@ export function activate(context: vscode.ExtensionContext): void {
   );
   context.subscriptions.push(disposableVariableDefinition);
 
-  let serverOptions: ServerOptions;
-
-  if (process.env.ENV === "development") {
-    // The server is already running and listening on port 5000
-    let connectionInfo = { port: 5000, host: "127.0.0.1" };
-
-    serverOptions = () => {
-      // Connect to the server via a socket
-      let socket = net.connect(connectionInfo);
-      let result: StreamInfo = {
-        writer: socket,
-        reader: socket,
-      };
-      return Promise.resolve(result);
-    };
-  } else {
-    // Ensure the virtual environment is set up and dependencies are installed
-    const venvPath = context.asAbsolutePath("venv");
-
-    // Check if the virtual environment directory exists, if not, create it
-    if (!fs.existsSync(venvPath)) {
-      console.log("Creating virtual environment...");
-      const pythonCommand = "python"; // Adjust if you need to specify python3 or a specific path
-      const venvCreateCmd = `${pythonCommand} -m venv ${venvPath}`;
-      try {
-        cp.execSync(venvCreateCmd);
-        console.log("Virtual environment created successfully.");
-      } catch (error) {
-        console.error("Failed to create virtual environment:", error);
-        vscode.window.showErrorMessage(
-          "Failed to create the Python virtual environment. Please check the console for more details."
-        );
-        return;
-      }
-    }
-    // Install dependencies in the virtual environment
-    const pipInstallCmd = `${venvPath}/Scripts/pip install -r src/server/requirements.txt`; // Windows path, adjust for macOS/Linux
-    try {
-      cp.execSync(pipInstallCmd, { cwd: context.extensionPath });
-      console.log("Dependencies installed successfully.");
-    } catch (error) {
-      console.error("Failed to install Python dependencies:", error);
-      vscode.window.showErrorMessage(
-        "Failed to set up the Python server. Please check the console for more details."
-      );
-      return;
-    }
-
-    // Adjust the server command to use the Python executable within the virtual environment
-    let serverCommand = `${venvPath}/Scripts/python`; // Windows path, adjust for macOS/Linux
-    let serverArgs = [
-      context.asAbsolutePath("src/server/server.py"),
-      "--stdio",
-    ];
-
-    serverOptions = {
-      command: serverCommand,
-      args: serverArgs,
-      transport: TransportKind.stdio,
-    };
-  }
-
   // Options to control the language client
-  let clientOptions: LanguageClientOptions = {
-    // Register the server for plain text documents
-    documentSelector: [{ scheme: "file", language: "solidworks-equations" }],
-  };
+  let clientOptions: LanguageClientOptions = getClientOptions();
+  let serverOptions: ServerOptions | undefined = getServerOptions(context);
 
-  // Create and start the language client
-  client = new LanguageClient(
-    "languageServerExample",
-    "Language Server Example",
-    serverOptions,
-    clientOptions
-  );
+  if (serverOptions) {
+    console.log("Server options set successfully.");
+    client = new LanguageClient(
+      "languageServer",
+      "Language Server",
+      serverOptions,
+      clientOptions
+    );
 
-  client.onNotification("$/variableEvaluations", (params) => {
-    const variableEvaluations = params.variableEvaluations;
-    // Use the URI and variable evaluations as needed
-    equations = Equations.fromJson(variableEvaluations);
-    variableTreeDataProvider.updateEquations(equations);
-  });
+    client.onNotification("$/variableEvaluations", (params) => {
+      const variableEvaluations = params.variableEvaluations;
+      // Use the URI and variable evaluations as needed
+      equations = Equations.fromJson(variableEvaluations);
+      variableTreeDataProvider.updateEquations(equations);
+    });
 
-  client.start();
+    client.start();
+  }
 
   const provider = new SolidworksEquationsDefinitionProvider();
   const selector = { scheme: "file", language: "solidworks-equations" };
