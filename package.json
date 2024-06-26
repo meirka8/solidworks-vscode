@@ -2,7 +2,7 @@
   "name": "solidworks",
   "displayName": "Solidworks",
   "description": "Extension for editing solidworks equations",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "engines": {
     "vscode": "^1.71.0"
   },
@@ -13,7 +13,7 @@
     "onLanguage:solidworks-equations",
     "*"
   ],
-  "main": "./out/client/extension.js",
+  "main": "./dist/extension.js",
   "contributes": {
     "languages": [
       {
@@ -55,17 +55,14 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run package",
-    "check-types": "tsc --noEmit",
     "compile": "npm run check-types && node esbuild.js",
+    "check-types": "tsc --noEmit",
     "watch": "npm-run-all -p watch:*",
     "watch:esbuild": "node esbuild.js --watch",
     "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
-    "pretest": "npm run compile && npm run lint",
-    "package": "npm run check-types && node esbuild.js --production",
-    "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
-  },
+    "vscode:prepublish": "npm run package",
+    "package": "npm run check-types && node esbuild.js --production"
+},
   "devDependencies": {
     "@types/glob": "^7.2.0",
     "@types/mocha": "^9.1.1",
