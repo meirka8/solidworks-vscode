@@ -1,3 +1,4 @@
+import os
 import networkx as nx
 from grammar.SolidWorksEquationsListener import SolidWorksEquationsListener
 from grammar.SolidWorksEquationsParser import SolidWorksEquationsParser
@@ -38,7 +39,10 @@ class VariableDependencyListener(SolidWorksEquationsListener):
             },
         }
 
-        print(f"{self.getImmediateChildVariableName(ctx)} ({len(self.getImmediateChildVariableName(ctx))}): {location['start']['line']}:{location['start']['column']} - {location['end']['line']}:{location['end']['column']}")
+        if os.getenv("ENV") == "development":
+            print(
+                f"{self.getImmediateChildVariableName(ctx)} ({len(self.getImmediateChildVariableName(ctx))}): {location['start']['line']}:{location['start']['column']} - {location['end']['line']}:{location['end']['column']}"
+            )
 
         return location
 
