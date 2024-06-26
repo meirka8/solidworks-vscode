@@ -104,19 +104,22 @@ export class VariableTreeDataProvider
   }
 }
 
-export function jumpToDefinition(uri: vscode.Uri, variable: Variable) {
-  // Use the VS Code API to navigate to the variable's location
-  const range = new vscode.Range(
-    new vscode.Position(
-      variable.location.start.line,
-      variable.location.start.column
-    ),
-    new vscode.Position(
-      variable.location.end.line,
-      variable.location.end.column
-    )
-  );
-  vscode.window.showTextDocument(uri).then((editor) => {
-    editor.selection = new vscode.Selection(range.start, range.end);
-  });
+export function jumpToDefinition(variable: Variable): void {
+  const editor = vscode.window.activeTextEditor;
+  if (editor) {
+    if (editor) {
+      let range = new vscode.Range(
+        new vscode.Position(
+          variable.location.start.line - 1,
+          variable.location.start.column
+        ),
+        new vscode.Position(
+          variable.location.end.line - 1,
+          variable.location.end.column
+        )
+      );
+      editor.selection = new vscode.Selection(range.start, range.end);
+      editor.revealRange(range);
+    }
+  }
 }

@@ -11,7 +11,10 @@ import {
   TransportKind,
 } from "vscode-languageclient/node";
 import { Equations } from "./variable";
-import { VariableTreeDataProvider } from "./variable_definition_provider";
+import {
+  jumpToDefinition,
+  VariableTreeDataProvider,
+} from "./variable_definition_provider";
 
 let client: LanguageClient;
 
@@ -27,25 +30,7 @@ export function activate(context: vscode.ExtensionContext): void {
   });
   const disposableVariableDefinition = vscode.commands.registerCommand(
     "extension.jumpToVariableDefinition",
-    (variable) => {
-      const editor = vscode.window.activeTextEditor;
-      if (editor) {
-        if (editor) {
-          let range = new vscode.Range(
-            new vscode.Position(
-              variable.location.start.line - 1,
-              variable.location.start.column
-            ),
-            new vscode.Position(
-              variable.location.end.line - 1,
-              variable.location.end.column
-            )
-          );
-          editor.selection = new vscode.Selection(range.start, range.end);
-          editor.revealRange(range);
-        }
-      }
-    }
+    jumpToDefinition
   );
   context.subscriptions.push(disposableVariableDefinition);
 
