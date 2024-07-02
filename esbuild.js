@@ -3,6 +3,7 @@ const fs = require('fs-extra');
 
 const production = process.argv.includes('--production');
 const watch = process.argv.includes('--watch');
+const dev = process.argv.includes('--dev');
 
 async function main() {
   const ctx = await esbuild.context({
@@ -10,7 +11,7 @@ async function main() {
     bundle: true,
     format: 'cjs',
     minify: production,
-    sourcemap: !production,
+    sourcemap: dev || !production,
     sourcesContent: false,
     platform: 'node',
     outfile: 'dist/extension.js',
@@ -21,7 +22,7 @@ async function main() {
       esbuildProblemMatcherPlugin
     ]
   });
-  if (watch) {
+  if (watch || dev) {
     await ctx.watch();
   } else {
     await ctx.rebuild();

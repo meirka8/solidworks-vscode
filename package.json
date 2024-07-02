@@ -61,7 +61,8 @@
     "watch:esbuild": "node esbuild.js --watch",
     "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
     "vscode:prepublish": "npm run package",
-    "package": "npm run check-types && node esbuild.js --production"
+    "package": "npm run check-types && node esbuild.js --production",
+    "build:dev": "npm run check-types && node esbuild.js --dev"
 },
   "devDependencies": {
     "@types/glob": "^7.2.0",
