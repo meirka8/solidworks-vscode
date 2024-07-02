@@ -29,12 +29,6 @@ export function activate(context: vscode.ExtensionContext): void {
   vscode.window.createTreeView("variableTree", {
     treeDataProvider: variableTreeDataProvider,
   });
-  const disposableVariableDefinition = vscode.commands.registerCommand(
-    "extension.jumpToVariableDefinition",
-    jumpToDefinition
-  );
-  context.subscriptions.push(disposableVariableDefinition);
-
   // Options to control the language client
   let clientOptions: LanguageClientOptions = getClientOptions();
   let serverOptions: ServerOptions | undefined = getServerOptions(context);
@@ -57,6 +51,28 @@ export function activate(context: vscode.ExtensionContext): void {
 
     client.start();
   }
+
+  const disposableVariableDefinition = vscode.commands.registerCommand(
+    "extension.jumpToVariableDefinition",
+    jumpToDefinition
+  );
+  context.subscriptions.push(disposableVariableDefinition);
+
+  let disposable = vscode.window.onDidChangeActiveTextEditor((editor) => {
+    if (editor) {
+      // simulate textDocument/didOpen
+      client.sendNotification("textDocument/didOpen", {
+        textDocument: {
+          uri: editor.document.uri.toString(),
+          languageId: editor.document.languageId,
+          version: editor.document.version,
+          text: editor.document.getText(),
+        },
+      });
+    }
+  });
+
+  context.subscriptions.push(disposable);
 
   const provider = new SolidworksEquationsDefinitionProvider();
   const selector = { scheme: "file", language: "solidworks-equations" };
