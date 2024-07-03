@@ -1,10 +1,7 @@
 import * as vscode from "vscode";
 
 // Regular expression for variable definition
-export const varRegex = /^("[a-zA-Z]\w*")\s*=/gm;
-
-// Regular expression for variable usage (this is just an example)
-export const varUsageRegex = /(?<=\S.*)("[a-zA-Z]\w*")/g;
+export const varRegex = /^(\"[^\"]*\")\s*=/gm;
 
 export interface VariableLocation {
   name: string;

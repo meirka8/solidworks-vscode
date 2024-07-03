@@ -1,158 +1,84 @@
+import * as cp from "child_process";
 import * as vscode from "vscode";
-import {
-  SolidworksEquationsDefinitionProvider,
-  getVariables,
-  varRegex,
-  varUsageRegex,
-  VariableLocation,
-} from "./definition_provider";
+import * as net from "net";
+import * as fs from "fs";
+import { SolidworksEquationsDefinitionProvider } from "./definition_provider";
 import {
   LanguageClient,
   LanguageClientOptions,
   ServerOptions,
+  StreamInfo,
   TransportKind,
 } from "vscode-languageclient/node";
+import { Equations } from "./variable";
 import {
-  VariableDefinitionProvider,
-  VariableDefinition,
+  jumpToDefinition,
+  VariableTreeDataProvider,
 } from "./variable_definition_provider";
+import { getClientOptions, getServerOptions } from "./server_utils";
 
 let client: LanguageClient;
 
 export function activate(context: vscode.ExtensionContext): void {
-  const serverModule = context.asAbsolutePath("out/server/server.js");
-  const debugOptions = { execArgv: ["--nolazy", "--inspect=6009"] };
-  const serverOptions: ServerOptions = {
-    run: { module: serverModule, transport: TransportKind.ipc },
-    debug: {
-      module: serverModule,
-      transport: TransportKind.ipc,
-      options: debugOptions,
-    },
-  };
-
-  const clientOptions: LanguageClientOptions = {
-    documentSelector: [{ scheme: "file", language: "solidworks-equations" }],
-    synchronize: {
-      configurationSection: "solidworksEquationsHighlighter",
-      fileEvents: vscode.workspace.createFileSystemWatcher("**/.eqn"),
-    },
-  };
-
-  client = new LanguageClient(
-    "solidworksEquationsHighlighter",
-    "SolidWorks Equations Highlighter",
-    serverOptions,
-    clientOptions
-  );
-
-  client.start();
-
-  // Initialize diagnostics
-  const diagnosticCollection = vscode.languages.createDiagnosticCollection(
-    "solidworks-equations"
-  );
-  const diagnostics: vscode.Diagnostic[] = [];
-
-  // get variables on startup
-  const editor = vscode.window.activeTextEditor;
-  const document = editor?.document;
-
-  let definedVariableDefinitions: VariableDefinition[] = [];
-  if (document) {
-    definedVariableDefinitions = diagnoseVariables(document, diagnostics);
-    diagnosticCollection.set(document.uri, diagnostics);
-  }
-  const variableDefinitionProvider = new VariableDefinitionProvider(
-    definedVariableDefinitions
-  );
+  let equations = new Equations();
+  const variableTreeDataProvider = new VariableTreeDataProvider(equations);
   vscode.window.registerTreeDataProvider(
     "variableDefinitions",
-    variableDefinitionProvider
+    variableTreeDataProvider
   );
+  vscode.window.createTreeView("variableTree", {
+    treeDataProvider: variableTreeDataProvider,
+  });
+  // Options to control the language client
+  let clientOptions: LanguageClientOptions = getClientOptions();
+  let serverOptions: ServerOptions | undefined = getServerOptions(context);
 
-  context.subscriptions.push(
-    vscode.workspace.onDidChangeTextDocument(function (event): void {
-      try {
-        const diagnostics: vscode.Diagnostic[] = [];
-        const document = event.document;
+  if (serverOptions) {
+    console.log("Server options set successfully.");
+    client = new LanguageClient(
+      "languageServer",
+      "Language Server",
+      serverOptions,
+      clientOptions
+    );
 
-        const definedVariableDefinitions = diagnoseVariables(
-          document,
-          diagnostics
-        );
-        variableDefinitionProvider.update(definedVariableDefinitions);
+    client.onNotification("$/variableEvaluations", (params) => {
+      const variableEvaluations = params.variableEvaluations;
+      // Use the URI and variable evaluations as needed
+      equations = Equations.fromJson(variableEvaluations);
+      variableTreeDataProvider.updateEquations(equations);
+    });
 
-        // Set the diagnostics
-        diagnosticCollection.set(document.uri, diagnostics);
-      } catch (e) {
-        console.error("Error handling onDidChangeTextDocument event:", e);
-      }
-    })
-  );
+    client.start();
+  }
 
   const disposableVariableDefinition = vscode.commands.registerCommand(
     "extension.jumpToVariableDefinition",
-    (variableDefinition: VariableDefinition) => {
-      const editor = vscode.window.activeTextEditor;
-      if (editor) {
-        let range = editor.document.lineAt(variableDefinition.line).range;
-        editor.selection = new vscode.Selection(range.start, range.end);
-        editor.revealRange(range);
-      }
-    }
+    jumpToDefinition
   );
-
   context.subscriptions.push(disposableVariableDefinition);
+
+  let disposable = vscode.window.onDidChangeActiveTextEditor((editor) => {
+    if (editor) {
+      // simulate textDocument/didOpen
+      client.sendNotification("textDocument/didOpen", {
+        textDocument: {
+          uri: editor.document.uri.toString(),
+          languageId: editor.document.languageId,
+          version: editor.document.version,
+          text: editor.document.getText(),
+        },
+      });
+    }
+  });
+
+  context.subscriptions.push(disposable);
 
   const provider = new SolidworksEquationsDefinitionProvider();
   const selector = { scheme: "file", language: "solidworks-equations" };
   const disposableEquationsDefinition =
     vscode.languages.registerDefinitionProvider(selector, provider);
   context.subscriptions.push(disposableEquationsDefinition);
-}
-
-function diagnoseVariables(
-  document: vscode.TextDocument,
-  diagnostics: vscode.Diagnostic[]
-) {
-  const definedVariableLocations = getVariables(document, varRegex);
-  const usedVariableLocations = getVariables(document, varUsageRegex);
-  const definedVariableNames = definedVariableLocations.map((v) => v.name);
-
-  diagnoseUndefinedVariables(
-    usedVariableLocations,
-    definedVariableNames,
-    diagnostics
-  );
-
-  const definedVariableDefinitions = definedVariableLocations.map(
-    VariableDefinition.fromVariableLocation
-  );
-  return definedVariableDefinitions.sort((a, b) =>
-    a.name.localeCompare(b.name)
-  );
-}
-
-function diagnoseUndefinedVariables(
-  usedVariableLocations: VariableLocation[],
-  definedVariableNames: string[],
-  diagnostics: vscode.Diagnostic[]
-) {
-  for (const usedVar of usedVariableLocations) {
-    if (!definedVariableNames.includes(usedVar.name)) {
-      const diagnostic: vscode.Diagnostic = {
-        severity: vscode.DiagnosticSeverity.Error,
-        range: new vscode.Range(
-          new vscode.Position(usedVar.line, usedVar.start),
-          new vscode.Position(usedVar.line, usedVar.end)
-        ),
-        message: `Undefined variable ${usedVar.name}`,
-        source: "solidworks-equations",
-      };
-      diagnostics.push(diagnostic);
-    }
-  }
 }
 
 export function deactivate(): Thenable<void> | undefined {

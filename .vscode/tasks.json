@@ -15,6 +15,16 @@
 				"kind": "build",
 				"isDefault": true
 			}
+		},
+		{
+			"label": "build:dev",
+			"type": "shell",
+			"command": "npm run build:dev",
+			"group": {
+			  "kind": "build",
+			  "isDefault": true
+			},
+			"problemMatcher": []
 		}
 	]
 }

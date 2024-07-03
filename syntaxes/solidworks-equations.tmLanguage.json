@@ -1,39 +1,25 @@
 {
-    "fileTypes": [".eqn"],
+    "fileTypes": [".eqn", ".txt"],
     "name": "SolidWorks Equations",
     "scopeName": "source.solidworks-equations",
     "patterns": [
       {
+        "name": "entity.name.function.solidworks-equations",
+        "match": "\"[^\"]*@[^\"]+\""
+      },
+      {
         "name": "variable.solidworks-equations",
-        "match": "\"[a-zA-Z]\\w*\""
+        "match": "\"[^\"]*\""
       },
       {
         "name": "constant.numeric.solidworks-equations",
-        "match": "\\b\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?(?:(?=\\s)|(?=\\s?(?:mm|in|ft|m|s|rad|deg|Hz|N|lbf|lbm|slug|g|kg|Pa|psi|atm)\\b))"
+        "match": "\\b\\d+(?:\\.\\d+)?(?:[eE][+-]?\\d+)?(?:(?=\\s)|(?=\\s?(?:mm|in|ft|m|s|rad|deg|Hz|N|lbf|lbm|slug|g|kg|Pa|psi|atm|cm|m|in|ft|yd|km|mi|nm|um|pm|fm|am)\\b))"
       },
       {
         "name": "constant.language.solidworks-equations",
-        "match": "(?<=\\d\\s?)(mm|in|ft|m|s|rad|deg|Hz|N|lbf|lbm|slug|g|kg|Pa|psi|atm)"
-      },
-      { "include": "#specific-measurement" }
-    ],
-    "repository": {
-      "specific-measurement": {
-        "begin": "(\"[a-zA-Z]\\w*@\\w+)",
-        "end": "\"",
-        "beginCaptures": {
-          "0": {
-            "name": "entity.name.function.solidworks-equations"
-          }
-        },
-        "endCaptures": {
-          "0": {
-            "name": "punctuation.definition.string.end.solidworks-equations"
-          }
-        },
-        "patterns": []
+        "match": "(?<=\\d\\s?)(mm|in|ft|m|s|rad|deg|Hz|N|lbf|lbm|slug|g|kg|Pa|psi|atm|cm|m|in|ft|yd|km|mi|nm|um|pm|fm|am)"
       }
-    },
+    ],
     "uuid": "89e6337f-2173-42dd-b079-3af8e5862586"
   }
   
