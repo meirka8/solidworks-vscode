@@ -44,7 +44,7 @@ Extension is preset to work with .eqn and .txt file extensions
 Once installed, the extension automatically activates the following features when you open a SolidWorks equations file or script:
 
 - Syntax highlighting activates based on the file content, with no additional setup required.
-- Linting for undefined variables runs on file save or can be triggered manually via the command palette (`Ctrl+Shift+P`), by typing "Lint SolidWorks Equations".
+- Linting and variables and measurements evaluation runs automatically on file being opened or changes being made.
 - To use the "Jump to Variable Definition" feature, simply hover over a variable and right-click, then select "Go to Definition" from the context menu.
 
 ## Contributing
